@@ -1,5 +1,6 @@
 "use client"
 
+import { router } from "expo-router"
 import type React from "react"
 import { useEffect, useState } from "react"
 import { Text, SafeAreaView, Image, TouchableOpacity, View, Dimensions, StatusBar } from "react-native"
@@ -166,8 +167,6 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({ onPress, title }) => {
 }
 
 const Welcome: React.FC = () => {
-  const insets = useSafeAreaInsets()
-
   return (
     <View className="flex-1 bg-secondary">
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
@@ -175,13 +174,11 @@ const Welcome: React.FC = () => {
       <StarryBackground />
 
       <SafeAreaView className="flex-1 items-center justify-between px-5 w-full">
-        <View style={{ height: insets.top }} />
-
-        <View className="flex items-center mt-10 w-full">
+        <View className="flex items-center w-full mt-32">
           <AnimatedLogo />
           <Animated.Text
             entering={FadeInDown.duration(800).delay(300)}
-            className="font-sora-bold text-5xl text-white mt-4 text-center"
+            className="font-sora-bold text-5xl text-white mt-5 text-center"
           >
             Welcome to Streek
           </Animated.Text>
@@ -192,11 +189,13 @@ const Welcome: React.FC = () => {
             Become a better person...
           </Animated.Text>
         </View>
-        <AnimatedButton title="Get Started" />
+        <View className="flex items-center">
+          <AnimatedButton title="Get Started" onPress={() => router.push('/sign-in')} />
 
-        <Animated.Text entering={FadeIn.delay(1000)} className="font-sora-regular text-xs text-white opacity-50 mb-2">
-          Version 1.0.0
-        </Animated.Text>
+          <Animated.Text entering={FadeIn.delay(1000)} className="font-sora-regular text-xs text-white opacity-50 mb-2">
+            Version 1.0.0
+          </Animated.Text>
+        </View>
       </SafeAreaView>
     </View>
   )

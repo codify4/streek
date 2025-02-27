@@ -38,6 +38,7 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: 'slide_from_right' }} />
         <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="sign-in" options={{ headerShown: false, animation: 'slide_from_right' }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
