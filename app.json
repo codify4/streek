@@ -1,0 +1,84 @@
+{
+  "expo": {
+    "name": "streek",
+    "slug": "streek",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icons/ios-light.png",
+    "scheme": "streek",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "fonts": [
+      {
+        "asset": "assets/fonts/Sora-Regular.ttf",
+        "family": "Sora-Regular"
+      },
+      {
+        "asset": "assets/fonts/Sora-Medium.ttf",
+        "family": "Sora-Medium"
+      },
+      {
+        "asset": "assets/fonts/Sora-SemiBold.ttf",
+        "family": "Sora-SemiBold"
+      },
+      {
+        "asset": "assets/fonts/Sora-Bold.ttf",
+        "family": "Sora-Bold"
+      },
+      {
+        "asset": "assets/fonts/Sora-ExtraBold.ttf",
+        "family": "Sora-ExtraBold"
+      },
+      {
+        "asset": "assets/fonts/Sora-Thin.ttf",
+        "family": "Sora-Thin"
+      },
+      {
+        "asset": "assets/fonts/Sora-Light.ttf",
+        "family": "Sora-Light"
+      },
+      {
+        "asset": "assets/fonts/Sora-ExtraLight.ttf",
+        "family": "Sora-ExtraLight"
+      }
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "icon": {
+        "light": "./assets/icons/ios-light.png",
+        "dark": "./assets/icons/ios-dark.png",
+        "tinted": "./assets/icons/ios-tinted.png"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icons/adaptive-icon.png",
+        "monochromeImage": "./assets/icons/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon-dark.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "image": "./assets/icons/splash-icon-light.png",
+            "backgroundColor": "#1B1B3A"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
