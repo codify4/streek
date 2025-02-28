@@ -154,7 +154,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({ onPress, title }) => {
   return (
     <Animated.View entering={FadeInUp.duration(800).delay(600)} style={animatedStyle}>
       <TouchableOpacity
-        className="flex items-center bg-primary rounded-full w-full py-5 px-32"
+        className="flex items-center bg-primary rounded-full w-full py-5 px-40 mb-2"
         onPress={onPress}
         onPressIn={onPressIn}
         onPressOut={onPressOut}
@@ -189,7 +189,7 @@ const Welcome: React.FC = () => {
             Become a better person...
           </Animated.Text>
         </View>
-        <View className="flex items-center">
+        <View className="flex items-center w-full">
           <AnimatedButton title="Get Started" onPress={() => router.push('/sign-in')} />
 
           <Animated.Text entering={FadeIn.delay(1000)} className="font-sora-regular text-xs text-white opacity-50 mb-2">

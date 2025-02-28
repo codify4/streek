@@ -13,6 +13,8 @@ import Animated, {
     withDelay,
     Easing,
   } from "react-native-reanimated"
+import Input from "@/components/input";
+import { router } from "expo-router";
 
 const quotes = [
   "Build better habits, one streak at a time.",
@@ -102,12 +104,13 @@ const SignIn = () => {
                 >
                     {/* Email input */}
                     <View className="mb-5">
-                        <TextInput
-                            placeholder="Enter your email"
-                            value={email}
-                            onChangeText={setEmail}
-                            className="bg-[#e7e3e3] rounded-xl px-5 py-5 text-lg font-sora-regular"
-                            placeholderTextColor="#646262"
+                        <Input 
+                            mode="outlined" 
+                            value={email} 
+                            onChangeText={setEmail} 
+                            placeholder="Email" 
+                            focus={false} 
+                            keyboardType="email-address"
                         />
                     </View>
 
@@ -131,7 +134,7 @@ const SignIn = () => {
                     </TouchableOpacity>
 
                     {/* Skip button */}
-                    <TouchableOpacity className="flex flex-row items-center justify-center border border-gray-300 rounded-full py-5 mt-10" activeOpacity={0.8}>
+                    <TouchableOpacity className="flex flex-row items-center justify-center border border-gray-300 rounded-full py-5 mt-10" activeOpacity={0.8} onPress={() => router.push('/onboarding')}>
                         <Text className="font-sora-semibold text-lg text-secondary text-center">Skip for now</Text>
                         <ChevronRight color="#1B1B3A"/>
                     </TouchableOpacity>
