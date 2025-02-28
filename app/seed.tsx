@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { StarryBackground } from './index';
+import { router } from 'expo-router';
 
 const Seed = () => {
   return (
@@ -17,7 +18,7 @@ const Seed = () => {
             <MaterialCommunityIcons name="seed" size={200} color="black" />        
           </View>
           
-          <TouchableOpacity className="flex items-center bg-primary rounded-full w-full py-5 px-32" activeOpacity={0.8}>
+          <TouchableOpacity className="flex items-center bg-primary rounded-full w-full py-5 px-32" activeOpacity={0.8} onPress={() => router.push('/onboarding')}>
             <Text className="font-sora-semibold text-xl text-white text-center">Grow your seedling</Text>
           </TouchableOpacity>
         </View>
