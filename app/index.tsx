@@ -27,7 +27,7 @@ interface StarProps {
   color?: string
 }
 
-const Star: React.FC<StarProps> = ({ size, top, left, delay, duration, color = "white" }) => {
+export const Star: React.FC<StarProps> = ({ size, top, left, delay, duration, color = "white" }) => {
   const opacity = useSharedValue(0)
   const translateY = useSharedValue(0)
   const scale = useSharedValue(1)
@@ -79,7 +79,7 @@ const Star: React.FC<StarProps> = ({ size, top, left, delay, duration, color = "
   )
 }
 
-const StarryBackground: React.FC = () => {
+export const StarryBackground: React.FC = () => {
   const { width, height } = Dimensions.get("window")
   const stars: React.ReactNode[] = []
 

@@ -134,7 +134,7 @@ const SignIn = () => {
                     </TouchableOpacity>
 
                     {/* Skip button */}
-                    <TouchableOpacity className="flex flex-row items-center justify-center border border-gray-300 rounded-full py-5 mt-10" activeOpacity={0.8} onPress={() => router.push('/onboarding')}>
+                    <TouchableOpacity className="flex flex-row items-center justify-center border border-gray-300 rounded-full py-5 mt-10" activeOpacity={0.8} onPress={() => router.push('/seed')}>
                         <Text className="font-sora-semibold text-lg text-secondary text-center">Skip for now</Text>
                         <ChevronRight color="#1B1B3A"/>
                     </TouchableOpacity>
