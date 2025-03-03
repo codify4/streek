@@ -58,6 +58,9 @@ const Onboarding = () => {
         setStep(step + 1)
         setIsAnimating(false)
       }, 300)
+    } else {
+      // Navigate to loading screen on last step
+      router.push("/loading-screen");
     }
   }
 

@@ -1,6 +1,10 @@
-import React from 'react';
-import { ScrollView,  Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Input from '../input';
+// import MeasurementPicker from './picker';
+// import RNDateTimePicker  from "@react-native-community/datetimepicker"
+// import CircularProgress from './circular-progress';
+// import { Picker } from '@react-native-picker/picker';
 import * as Haptics from 'expo-haptics';
 
 interface OnboardingSlide {
@@ -24,6 +28,29 @@ export const OnboardingInput: React.FC<OnboardingInputProps> = ({
   value,
   onChangeText,
 }) => {
+    // const [loadingProgress, setLoadingProgress] = useState(0);
+
+
+    // // Loading animation effect
+    // React.useEffect(() => {
+    //   if (slide.type === 'loading') {
+    //     const interval = setInterval(() => {
+    //       setLoadingProgress(prev => {
+    //         if (prev >= 100) {
+    //           clearInterval(interval);
+    //           return 100;
+    //         }
+    //         return prev + 1;
+    //       });
+    //     }, 30);
+
+    //     return () => clearInterval(interval);
+    //   }
+    // }, [slide.type]);
+
+    // if (slide.type === 'loading') {
+    //   return <CircularProgress />;
+    // }
 
     if (slide.type === 'text') {
         return (
