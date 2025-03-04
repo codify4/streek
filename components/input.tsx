@@ -17,9 +17,10 @@ const Input = ({ mode, value, onChangeText, placeholder, focus, keyboardType, mo
             onChangeText={onChangeText}
             placeholder={placeholder}
             placeholderTextColor="#9ca3af"
-            placeholderClassName='font-poppins'
+            placeholderClassName='font-sora'
             style={{ 
-                height: 60, 
+                height: 60,
+                fontSize: 15,
                 borderRadius: 15, 
                 padding: 10, 
                 backgroundColor: mode === 'outlined' ? '#fff' : '#1f2937', 

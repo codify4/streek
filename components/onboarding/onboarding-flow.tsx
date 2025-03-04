@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Input from '../input';
-// import MeasurementPicker from './picker';
-// import RNDateTimePicker  from "@react-native-community/datetimepicker"
-// import CircularProgress from './circular-progress';
-// import { Picker } from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import * as Haptics from 'expo-haptics';
 
 interface OnboardingSlide {
@@ -28,29 +25,6 @@ export const OnboardingInput: React.FC<OnboardingInputProps> = ({
   value,
   onChangeText,
 }) => {
-    // const [loadingProgress, setLoadingProgress] = useState(0);
-
-
-    // // Loading animation effect
-    // React.useEffect(() => {
-    //   if (slide.type === 'loading') {
-    //     const interval = setInterval(() => {
-    //       setLoadingProgress(prev => {
-    //         if (prev >= 100) {
-    //           clearInterval(interval);
-    //           return 100;
-    //         }
-    //         return prev + 1;
-    //       });
-    //     }, 30);
-
-    //     return () => clearInterval(interval);
-    //   }
-    // }, [slide.type]);
-
-    // if (slide.type === 'loading') {
-    //   return <CircularProgress />;
-    // }
 
     if (slide.type === 'text') {
         return (
@@ -58,10 +32,38 @@ export const OnboardingInput: React.FC<OnboardingInputProps> = ({
         );
     }
 
-    if (slide.type === 'age') {
+    if(slide.type === 'age') {
+        const [selectedAge, setSelectedAge] = useState(value);
+        
+        const ageValues = Array.from({ length: 101 }, (_, i) => 5 + i);
+
+        const handleAgeChange = (age: string) => {
+            setSelectedAge(age);
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        };
+
         return (
-            <Input mode='outlined' value={value} onChangeText={onChangeText} placeholder={slide.placeholder} keyboardType='numeric' />
-        );
+            <View className="flex-1 ml-2">
+                <View className="bg-transparent rounded-2xl overflow-hidden">
+                    <Picker
+                        selectedValue={selectedAge}
+                        onValueChange={setSelectedAge}
+                        dropdownIconColor="white"
+                        style={{ color: 'black' }}
+                        itemStyle={{ color: 'black' }}
+                    >
+                        {ageValues.map((age) => (
+                            <Picker.Item
+                                key={age}
+                                label={age.toString()}
+                                value={age.toString()}
+                                color={Platform.OS === 'android' ? 'black' : 'black'}
+                            />
+                        ))}
+                    </Picker>
+                </View>
+            </View>
+        )
     }
 
     if (slide.type === 'choice') {
