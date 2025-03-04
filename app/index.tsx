@@ -190,7 +190,7 @@ const Welcome: React.FC = () => {
           </Animated.Text>
         </View>
         <View className="flex items-center w-full">
-          <AnimatedButton title="Get Started" onPress={() => router.push('/sign-in')} />
+          <AnimatedButton title="Get Started" onPress={() => router.push('/(tabs)/home')} />
 
           <Animated.Text entering={FadeIn.delay(1000)} className="font-sora-regular text-xs text-white opacity-50 mb-2">
             Version 1.0.0

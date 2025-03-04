@@ -1,53 +1,67 @@
 import { Tabs } from 'expo-router';
-import { Home, Trophy } from 'lucide-react-native';
+import { Home, Trophy, Plus } from 'lucide-react-native';
 import React from 'react';
-import { Platform } from 'react-native';
+import { View, TouchableOpacity, Platform } from 'react-native';
+import { router } from 'expo-router';
+
+function TabBarIcon(props: {
+  name: React.ElementType;
+  color: string;
+}) {
+  return <props.name color={props.color} size={24} />;
+}
 
 export default function TabLayout() {
-
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarShowLabel: true,
         tabBarStyle: {
             backgroundColor: '#00B865',
+          borderTopWidth: 0,
+          height: 60,
             position: 'absolute',
             borderTopColor: '#00B865',
-            borderTopWidth: Platform.OS === 'ios' ? 1 : 0,
             minHeight: Platform.OS === 'ios' ? 70 : 40,
             alignContent: 'center',
         },
         tabBarActiveTintColor: '#fff',
-        tabBarHideOnKeyboard: true,
+        tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.6)',
         tabBarLabelStyle: {
-            fontFamily: 'Sora-Regular'
-        }
-    }}>
+          fontFamily: 'Sora-Regular',
+          fontSize: 12,
+        },
+      }}
+    >
       <Tabs.Screen
         name="home"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color, size }) => (
-            <Home color='white' size={size} />
+          animation: 'shift',
+          tabBarIcon: ({ color }) => <TabBarIcon name={Home} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="add"
+        options={{
+          title: '',
+          tabBarButton: () => (
+            <TouchableOpacity
+              className="absolute -ml-7 items-center justify-center rounded-full bg-primary border-2 border-white"
+              style={{ width: 70, height: 70, left: '45%', top: '-90%' }}
+              onPress={() => router.push('/add')}
+            >
+              <Plus color="white" size={28} />
+            </TouchableOpacity>
           ),
-          tabBarLabelStyle: {
-            fontFamily: 'Sora-Medium',
-            color: '#fff'
-          }
         }}
       />
       <Tabs.Screen
         name="wins"
         options={{
           title: 'Wins',
-          tabBarIcon: ({ color, size }) => (
-            <Trophy color='white' size={size} />
-          ),
-          tabBarLabelStyle: {
-            fontFamily: 'Sora-Medium',
-            color: '#fff'
-          }
+          animation: 'shift',
+          tabBarIcon: ({ color }) => <TabBarIcon name={Trophy} color={color} />,
         }}
       />
     </Tabs>
