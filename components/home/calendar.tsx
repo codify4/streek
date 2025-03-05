@@ -26,12 +26,12 @@ const Calendar: React.FC<CalendarProps> = ({ days, onSelectDay }) => {
               <TouchableOpacity
                 key={index}
                 onPress={() => onSelectDay(day)}
-                className={`flex items-center justify-center rounded-2xl w-14 h-[70px] mr-2 ${
+                className={`flex items-center justify-center h-[70px] mr-2 ${
                   isPast ? 'bg-primary' : 
                   isToday ? 'bg-secondary border-2 border-primary' : 
                   'bg-secondary'
                 }`}
-                style={{ padding: 10 }}
+                style={{ padding: 10, width: 60, borderRadius: 20 }}
               >
                 <Text className="text-white font-sora-semibold text-xs">{day.day}</Text>
                 <Text className="text-white font-sora-bold text-2xl">{day.date}</Text>
