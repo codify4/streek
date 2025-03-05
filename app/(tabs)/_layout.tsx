@@ -121,7 +121,14 @@ export default function TabLayout() {
             ),
           }}
         />
+        <Tabs.Screen
+          name="settings"
+          options={{
+            href: null,
+          }}
+        />
       </Tabs>
+
       <BotSheet ref={bottomSheetRef} snapPoints={["80%"]}>
         <Text className="text-secondary font-sora-bold text-3xl mb-5">Add a new habit</Text>
         <View className="flex-col items-start justify-center" style={{ width: "90%" }}>

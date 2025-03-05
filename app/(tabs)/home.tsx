@@ -6,6 +6,7 @@ import Calendar from '@/components/home/calendar';
 import HabitCard from '@/components/home/habit-card';
 import { habits as initialHabits, calendarDays, CalendarDay, Habit } from '@/constants/data';
 import * as Haptics from 'expo-haptics';
+import { router } from 'expo-router';
 
 const Home = () => {
   const [habits, setHabits] = useState<Habit[]>(initialHabits);
@@ -61,7 +62,7 @@ const Home = () => {
           />
           <Text className="font-sora-bold text-[#1B1B3A] text-3xl">Streek</Text>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push('/(tabs)/settings')}>
           <Settings color="#1B1B3A" size={26} strokeWidth={3} />
         </TouchableOpacity>
       </View>
