@@ -48,7 +48,7 @@ const Settings = () => {
       </View>
 
       {/* Settings List */}
-      <View className="mx-5 bg-white rounded-3xl overflow-hidden mt-5 px-5 gap-2 flex justify-between">
+      <View className="mx-5 bg-white rounded-3xl overflow-hidden mt-5 gap-2 flex justify-between">
         <View className="gap-2">
           {/* Notifications */}
           <View className="flex-row items-center justify-between px-5 py-4 border-b border-gray-200 bg-[#F0EFEF] rounded-2xl">
@@ -93,9 +93,9 @@ const Settings = () => {
           </TouchableOpacity>
         </View>
         {/* Logout Button */}
-        <View className="px-5 mb-10">
+        <View>
           <TouchableOpacity
-            className="flex-row items-center justify-center py-4 bg-red-50 rounded-full"
+            className="flex-row items-center justify-center py-5 bg-red-50 rounded-2xl"
             onPress={handleLogout}
           >
             <LogOut color="#ef4444" size={20} />
