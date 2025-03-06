@@ -6,6 +6,7 @@ import { useRef, useState } from "react"
 import { View, Text, Dimensions } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, runOnJS, Layout } from "react-native-reanimated"
+import LottieView from "lottie-react-native";
 
 interface HabitCardProps {
   habit: Habit
@@ -114,9 +115,14 @@ const HabitCard = ({ habit, onComplete, onDelete }: HabitCardProps) => {
                 </View>
               )}
             </View>
-            <View className="flex-row items-center">
-              <Flame color="#00B865" size={24} strokeWidth={3} />
-              <Text className="text-secondary font-sora-semibold text-xl">{habit.days} days</Text>
+            <View className="flex-1 flex-row items-center justify-center">
+              <LottieView
+                source={{ uri: "https://lottie.host/7a9ddf93-24b7-4bd9-8a73-ab95d06584dd/F4xzQAEY6P.json" }}
+                autoPlay
+                loop
+                style={{ width: 30, height: 30 }}
+              />
+              <Text className="text-secondary font-sora-semibold text-xl ml-1">{habit.days} days</Text>
             </View>
           </View>
 
