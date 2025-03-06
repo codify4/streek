@@ -62,10 +62,10 @@ const TreeSection = () => {
   return (
     <>
       <TouchableOpacity onPress={toggleModal}>
-        <View className="bg-white rounded-3xl p-6 mb-8 shadow-sm">
+        <View className="bg-secondary/10 rounded-3xl p-6 mb-8">
           <Text className="font-sora-bold text-secondary text-2xl mb-4">My Tree</Text>
 
-          <View className="bg-[#F0F4F8] rounded-3xl items-center justify-center p-10 mb-6">
+          <View className="bg-white/60 rounded-3xl items-center justify-center p-10 mb-6">
             <Animated.Text style={animatedStyles} className="text-8xl">
               {getTreeEmoji(treeProgress)}
             </Animated.Text>
@@ -73,7 +73,7 @@ const TreeSection = () => {
 
           <View className="flex-row items-center">
             <Text className="mr-2 text-2xl">🌰</Text>
-            <View className="flex-1 h-4 bg-[#E2E8F0] rounded-full overflow-hidden">
+            <View className="flex-1 h-4 bg-white rounded-full overflow-hidden">
               <View className="h-full bg-primary rounded-full" style={{ width: `${treeProgress}%` }} />
             </View>
             <Text className="ml-2 text-2xl">🌴</Text>

@@ -58,10 +58,9 @@ const Home = () => {
     <SafeAreaView className="flex-1 bg-white">
       <Header title='Habits'/>
 
-      <ScrollView className="flex-1 px-5 bg-white">
-        {/* Calendar */}
+      <View className='px-5'>
         <Calendar days={calendarDays} onSelectDay={handleSelectDay} />
-      </ScrollView>
+      </View>
 
       <GestureDetector gesture={scrollGesture}>
         <FlatList
