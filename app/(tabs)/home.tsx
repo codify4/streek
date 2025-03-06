@@ -9,6 +9,7 @@ import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Header from '@/components/header';
+import { StatusBar } from 'expo-status-bar';
 
 const Home = () => {
   const [habits, setHabits] = useState<Habit[]>(initialHabits);
@@ -56,6 +57,7 @@ const Home = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
+      <StatusBar style="dark" />
       <Header title='Habits'/>
 
       <View className='px-5'>

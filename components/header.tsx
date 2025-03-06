@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity, Image } from 'react-native'
 
 const Header = ({ title }: { title: string }) => {
     return (
-        <View className="flex-row items-center justify-between px-5 py-4 w-full">
+      <View className="flex-row items-center justify-between px-5 py-4 w-full">
         <View className="flex-row justify-center items-center">
           <Image 
             source={require('@/assets/icons/splash-icon-light.png')} 
