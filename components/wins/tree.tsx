@@ -100,7 +100,7 @@ const TreeSection = () => {
 
           <View className="mb-6">
             <Text className="font-sora-medium text-secondary text-lg mb-2">Growth Progress</Text>
-            <View className="h-6 bg-[#E2E8F0] rounded-full overflow-hidden">
+            <View className="h-3 bg-[#E2E8F0] rounded-full overflow-hidden">
               <Animated.View className="h-3 bg-primary rounded-full" style={progressBarStyles} />
             </View>
           </View>
