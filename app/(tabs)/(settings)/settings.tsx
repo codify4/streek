@@ -5,6 +5,7 @@ import { useState } from "react"
 import { View, Text, SafeAreaView, TouchableOpacity, Switch, Platform, Image } from "react-native"
 import { ChevronRight, LogOut, User } from "lucide-react-native"
 import * as Haptics from "expo-haptics"
+import { router } from "expo-router"
 
 const Settings = () => {
   const [notifications, setNotifications] = useState(true)
@@ -77,7 +78,7 @@ const Settings = () => {
           {/* Terms of Service */}
           <TouchableOpacity
             className="flex-row items-center justify-between px-5 py-5 border-b border-gray-200 bg-[#F0EFEF] rounded-2xl"
-            onPress={() => console.log("ToS pressed")}
+            onPress={() => router.push('/(tabs)/(settings)/tos')}
           >
             <Text className="font-sora-medium text-[#1B1B3A] text-base">Terms of Service</Text>
             <ChevronRight color="#1B1B3A" size={20} />
@@ -86,7 +87,7 @@ const Settings = () => {
           {/* Privacy Policy */}
           <TouchableOpacity
             className="flex-row items-center justify-between px-5 py-5 bg-[#F0EFEF] rounded-2xl"
-            onPress={() => console.log("Privacy Policy pressed")}
+            onPress={() => router.push('/(tabs)/(settings)/privacy-policy')}
           >
             <Text className="font-sora-medium text-[#1B1B3A] text-base">Privacy Policy</Text>
             <ChevronRight color="#1B1B3A" size={20} />

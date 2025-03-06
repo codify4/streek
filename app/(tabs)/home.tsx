@@ -62,7 +62,7 @@ const Home = () => {
           />
           <Text className="font-sora-bold text-[#1B1B3A] text-3xl">Streek</Text>
         </View>
-        <TouchableOpacity onPress={() => router.push('/(tabs)/settings')}>
+        <TouchableOpacity onPress={() => router.push('/(tabs)/(settings)/settings')}>
           <Settings color="#1B1B3A" size={26} strokeWidth={3} />
         </TouchableOpacity>
       </View>
