@@ -1,12 +1,13 @@
 // app/home.tsx
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, FlatList } from 'react-native';
 import { Settings } from 'lucide-react-native';
 import Calendar from '@/components/home/calendar';
 import HabitCard from '@/components/home/habit-card';
 import { habits as initialHabits, calendarDays, CalendarDay, Habit } from '@/constants/data';
 import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 const Home = () => {
   const [habits, setHabits] = useState<Habit[]>(initialHabits);
@@ -49,6 +50,9 @@ const Home = () => {
     setHabits(prevHabits => prevHabits.filter(habit => habit.id !== id));
   };
 
+  const scrollGesture = Gesture.Pan().activeOffsetY([-10, 10]);
+
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
@@ -70,20 +74,23 @@ const Home = () => {
       <ScrollView className="flex-1 px-5 bg-white">
         {/* Calendar */}
         <Calendar days={calendarDays} onSelectDay={handleSelectDay} />
-        
-        {/* Habit Cards */}
-        {habits.map(habit => (
-          <HabitCard 
-            key={habit.id} 
-            habit={habit} 
-            onComplete={handleCompleteHabit}
-            onDelete={handleDeleteHabit}
-          />
-        ))}
-        
-        {/* Add some padding at the bottom for the tab bar */}
-        <View className="h-24" />
       </ScrollView>
+
+      <GestureDetector gesture={scrollGesture}>
+        <FlatList
+          data={habits}
+          keyExtractor={item => item.id}
+          renderItem={({item: habit}) => (
+            <HabitCard
+              habit={habit}
+              onComplete={handleCompleteHabit} 
+              onDelete={handleDeleteHabit}
+            />
+          )}
+          contentContainerStyle={{ paddingHorizontal: 20 }}
+          ListFooterComponent={() => <View className="h-24" />}
+        />
+      </GestureDetector>
     </SafeAreaView>
   );
 };

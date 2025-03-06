@@ -36,6 +36,20 @@ export interface Habit {
       progress: 30,
       color: '#FFB800', // yellow
     },
+    {
+      id: '5',
+      name: 'Go Gym',
+      days: 7,
+      progress: 30,
+      color: '#FFB800', // yellow
+    },
+    {
+      id: '6',
+      name: 'Go Gym',
+      days: 7,
+      progress: 30,
+      color: '#FFB800', // yellow
+    },
   ];
   
   export interface CalendarDay {
