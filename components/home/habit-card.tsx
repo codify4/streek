@@ -141,4 +141,3 @@ const HabitCard = ({ habit, onComplete, onDelete }: HabitCardProps) => {
 }
 
 export default HabitCard
-

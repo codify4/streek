@@ -1,9 +1,22 @@
-import { SafeAreaView, Text } from 'react-native';
+import { SafeAreaView, ScrollView, View } from "react-native"
+import StatsSection from "@/components/wins/stats"
+import TreeSection from "@/components/wins/tree"
+import QuoteSection from "@/components/wins/quote"
+import Header from "@/components/header"
 
-export default function WinsScreen() {
+const Wins = () => {
   return (
-    <SafeAreaView className='bg-white flex-1 items-center justify-center'>
-      <Text className='font-sora-bold text-secondary text-3xl'>Wins</Text>
+    <SafeAreaView className="flex-1 bg-white">
+      <Header title="Your Wins" />
+      <ScrollView className="flex-1 px-5">
+        <StatsSection />
+        <TreeSection />
+        <QuoteSection />
+        <View className="h-24" />
+      </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
+
+export default Wins
+

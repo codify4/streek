@@ -8,6 +8,7 @@ import { habits as initialHabits, calendarDays, CalendarDay, Habit } from '@/con
 import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Header from '@/components/header';
 
 const Home = () => {
   const [habits, setHabits] = useState<Habit[]>(initialHabits);
@@ -55,21 +56,7 @@ const Home = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/* Header */}
-      <View className="flex-row items-center justify-between px-5 py-4 w-full">
-        <View className="flex-row items-center">
-          <Image 
-            source={require('@/assets/icons/splash-icon-light.png')} 
-            className="mr-2" 
-            style={{ width: 40, height: 40 }} 
-            resizeMode="contain" 
-          />
-          <Text className="font-sora-bold text-[#1B1B3A] text-3xl">Streek</Text>
-        </View>
-        <TouchableOpacity onPress={() => router.push('/(tabs)/(settings)/settings')}>
-          <Settings color="#1B1B3A" size={26} strokeWidth={3} />
-        </TouchableOpacity>
-      </View>
+      <Header title='Habits'/>
 
       <ScrollView className="flex-1 px-5 bg-white">
         {/* Calendar */}
