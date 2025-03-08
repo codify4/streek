@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import { View, Text, TextInput, TouchableOpacity, Dimensions, KeyboardAvoidingView, Platform } from "react-native"
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native"
+import * as Linking from "expo-linking";
 import { Image } from "react-native"
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { ChevronRight } from 'lucide-react-native'
@@ -9,12 +10,12 @@ import Animated, {
     useSharedValue,
     useAnimatedStyle,
     withTiming,
-    withSequence,
-    withDelay,
     Easing,
-  } from "react-native-reanimated"
+} from "react-native-reanimated"
 import Input from "@/components/input";
 import { router } from "expo-router";
+import { useAuth } from "@/context/auth";
+import { createSessionFromUrl, performOAuth } from "@/lib/auth-lib";
 
 const quotes = [
   "Build better habits, one streak at a time.",
@@ -73,7 +74,18 @@ const AnimatedQuotes = () => {
 }
 
 const SignIn = () => {
-  const [email, setEmail] = useState("")
+    const [email, setEmail] = useState("")
+    const url = Linking.useURL();
+    const { session } = useAuth();
+    
+    React.useEffect(() => {
+        if (url) {
+            createSessionFromUrl(url).catch(console.error);
+        }
+    }, [url]);
+
+    // If we already have a session, we'll be redirected by _layout.tsx
+    if (session) return null;
 
     return (
         <KeyboardAvoidingView
@@ -128,6 +140,7 @@ const SignIn = () => {
                     <TouchableOpacity
                         className="bg-[#e7e7e7] rounded-full py-5 flex-row items-center justify-center mb-8"
                         activeOpacity={0.8}
+                        onPress={performOAuth}
                     >
                         <FontAwesome name="google" size={24} color="#1B1B3A" className="mr-2"/>
                         <Text className="font-sora-semibold text-lg text-secondary">Sign In with Google</Text>

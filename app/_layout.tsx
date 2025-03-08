@@ -7,6 +7,9 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { AuthProvider, useAuth } from "@/context/auth";
+import { useRouter, useSegments } from 'expo-router';
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -23,6 +26,26 @@ export default function RootLayout() {
     'Sora-ExtraLight': require('@/assets/fonts/Sora-ExtraLight.ttf'),
   });
 
+  const { session, loading } = useAuth();
+  const segments = useSegments();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (loading) return;
+
+    const inAuthGroup = segments[0] === '(tabs)';
+    const isOnboarding = segments[0] === 'onboarding';
+    const isSignin = segments[0] === 'sign-in';
+
+    if (session && !inAuthGroup) {
+      // Signed in, redirect to home
+      router.replace('/(tabs)/home');
+    } else if (!session && !isOnboarding && !isSignin) {
+      // Not signed in and not on welcome/onboarding/signin, redirect to welcome
+      router.replace('/');
+    }
+  }, [session, loading, segments]);
+
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -35,16 +58,18 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: 'slide_from_right' }} />
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="sign-in" options={{ headerShown: false, animation: 'slide_from_right' }} />
-        <Stack.Screen name="seed" options={{ headerShown: false, animation: 'slide_from_right' }} />
-        <Stack.Screen name="onboarding" options={{ headerShown: false, animation: 'slide_from_right' }} />
-        <Stack.Screen name="loading-screen" options={{ headerShown: false, animation: 'slide_from_right' }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="dark" />
+      <AuthProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: 'slide_from_right' }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="sign-in" options={{ headerShown: false, animation: 'slide_from_right' }} />
+          <Stack.Screen name="seed" options={{ headerShown: false, animation: 'slide_from_right' }} />
+          <Stack.Screen name="onboarding" options={{ headerShown: false, animation: 'slide_from_right' }} />
+          <Stack.Screen name="loading-screen" options={{ headerShown: false, animation: 'slide_from_right' }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="light" />
+      </AuthProvider>
     </GestureHandlerRootView>
   );
 }
