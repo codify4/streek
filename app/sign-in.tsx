@@ -76,16 +76,15 @@ const AnimatedQuotes = () => {
 const SignIn = () => {
     const [email, setEmail] = useState("")
     const url = Linking.useURL();
-    const { session } = useAuth();
+    const { session, loading } = useAuth();
     
-    React.useEffect(() => {
+    useEffect(() => {
         if (url) {
-            createSessionFromUrl(url).catch(console.error);
+            createSessionFromUrl(url).catch(error => {
+                console.error("Error processing URL:", error);
+            });
         }
     }, [url]);
-
-    // If we already have a session, we'll be redirected by _layout.tsx
-    if (session) return null;
 
     return (
         <KeyboardAvoidingView

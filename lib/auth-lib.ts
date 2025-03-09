@@ -10,61 +10,42 @@ const redirectTo = makeRedirectUri({
   preferLocalhost: false,
 });
 
+
 export const createSessionFromUrl = async (url: string) => {
-    const { params, errorCode } = QueryParams.getQueryParams(url);
-  
-    if (errorCode) throw new Error(errorCode);
-    const { access_token, refresh_token } = params;
-  
-    if (!access_token) return;
-  
-    const { data, error } = await supabase.auth.setSession({
-      access_token,
-      refresh_token,
-    });
-    if (error) throw error;
-    
-    // The navigation will be handled by the auth state change in _layout.tsx
-    return data.session;
+  const { params, errorCode } = QueryParams.getQueryParams(url);
+
+  if (errorCode) throw new Error(errorCode);
+  const { access_token, refresh_token } = params;
+
+  if (!access_token) return;
+
+  const { data, error } = await supabase.auth.setSession({
+    access_token,
+    refresh_token,
+  });
+  if (error) throw error;
+  return data.session;
 };
 
 export const performOAuth = async () => {
-    try {
-      console.log("Starting OAuth flow with redirectTo:", redirectTo);
-      
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo,
-          skipBrowserRedirect: true,
-        },
-      });
-      
-      if (error) {
-        console.error("Supabase OAuth error:", error);
-        throw error;
-      }
-      
-      console.log("Opening browser with URL:", data?.url);
-      
-      const res = await WebBrowser.openAuthSessionAsync(
-        data?.url ?? "",
-        redirectTo
-      );
-      
-      console.log("Browser result:", res);
-      
-      if (res.type === "success") {
-        const { url } = res;
-        console.log("Success URL:", url);
-        await createSessionFromUrl(url);
-      } else {
-        console.log("Auth was dismissed or failed:", res.type);
-      }
-    } catch (error) {
-      console.error("OAuth process error:", error);
-      throw error;
-    }
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo,
+      skipBrowserRedirect: true,
+    },
+  });
+  if (error) throw error;
+
+  const res = await WebBrowser.openAuthSessionAsync(
+    data?.url ?? "",
+    redirectTo
+  );
+
+  if (res.type === "success") {
+    const { url } = res;
+    await createSessionFromUrl(url);
+  }
 };
 
 export async function signOut() {

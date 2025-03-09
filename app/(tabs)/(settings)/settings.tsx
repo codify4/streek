@@ -6,6 +6,7 @@ import { View, Text, SafeAreaView, TouchableOpacity, Switch, Platform, Image } f
 import { ChevronRight, LogOut, User } from "lucide-react-native"
 import * as Haptics from "expo-haptics"
 import { router } from "expo-router"
+import { signOut } from "@/lib/auth-lib"
 
 const Settings = () => {
   const [notifications, setNotifications] = useState(true)
@@ -25,12 +26,17 @@ const Settings = () => {
     setter((prev) => !prev)
   }
 
-  const handleLogout = () => {
-    if (hapticFeedback && Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+  const handleLogout = async () => {
+    try {
+      if (hapticFeedback && Platform.OS !== "web") {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+      }
+      await signOut();
+      router.replace('/');
     }
-    // Implement logout logic here
-    console.log("Logging out...")
+    catch (error) {
+      console.error("Error logging out:", error);
+    }
   }
 
   return (
