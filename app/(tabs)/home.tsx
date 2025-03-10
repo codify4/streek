@@ -1,6 +1,6 @@
 // app/home.tsx
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, FlatList, Platform } from 'react-native';
 import { Settings } from 'lucide-react-native';
 import Calendar from '@/components/home/calendar';
 import HabitCard from '@/components/home/habit-card';
@@ -56,7 +56,7 @@ const Home = () => {
 
 
   return (
-    <SafeAreaView className="flex-1 bg-white mt-10">
+    <SafeAreaView className="flex-1 bg-white" style={ Platform.OS === "ios" ? { marginTop: 0 } : { marginTop: 40 } }>
       <StatusBar style="dark" />
       <Header title='Habits'/>
 

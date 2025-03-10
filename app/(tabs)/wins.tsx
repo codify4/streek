@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, View } from "react-native"
+import { Platform, SafeAreaView, ScrollView, View } from "react-native"
 import StatsSection from "@/components/wins/stats"
 import TreeSection from "@/components/wins/tree"
 import QuoteSection from "@/components/wins/quote"
@@ -6,7 +6,7 @@ import Header from "@/components/header"
 
 const Wins = () => {
   return (
-    <SafeAreaView className="flex-1 bg-white mt-10">
+    <SafeAreaView className="flex-1 bg-white" style={ Platform.OS === "ios" ? { marginTop: 0 } : { marginTop: 40 } }>
       <Header title="Your Wins" />
       <ScrollView className="flex-1 px-5">
         <StatsSection />
