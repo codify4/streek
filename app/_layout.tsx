@@ -14,23 +14,51 @@ import { useRouter, useSegments } from 'expo-router';
 SplashScreen.preventAutoHideAsync();
 
 function RootLayoutNav() {
-  const { session, loading } = useAuth();
+  const { session, loading, onboardingCompleted } = useAuth();
   const segments = useSegments();
   const router = useRouter();
 
   useEffect(() => {
     if (loading) return;
 
-    const inAuthGroup = segments[0] === '(tabs)';
-    const isOnboarding = segments[0] === 'onboarding';
-    const isSignin = segments[0] === 'sign-in';
-
-    if (session && !inAuthGroup) {
-      router.replace('/(tabs)/home');
-    } else if (!session && !isOnboarding && !isSignin) {
-      router.replace('/');
+    console.log("Auth state:", { 
+      session: !!session, 
+      onboardingCompleted, 
+      currentRoute: segments[0] || 'root',
+      loading
+    });
+    
+    // Get current route
+    const currentRoute = segments[0] || '';
+    
+    if (!session) {
+      // Not authenticated
+      // Allow access to landing page and sign-in
+      // No automatic redirects for unauthenticated users
+      // They can freely navigate between / and /sign-in
+      return;
+    } else {
+      // User is authenticated
+      if (onboardingCompleted) {
+        // User has completed onboarding - send to home
+        const inAuthGroup = segments[0] === '(tabs)';
+        const isLoadingScreen = segments[0] === 'loading-screen';
+        
+        if (!inAuthGroup && !isLoadingScreen) {
+          router.replace('/(tabs)/home');
+        }
+      } else {
+        // User hasn't completed onboarding - allow onboarding flow
+        const isSeed = segments[0] === 'seed';
+        const isOnboarding = segments[0] === 'onboarding';
+        const isLoadingScreen = segments[0] === 'loading-screen';
+        
+        if (!isSeed && !isOnboarding && !isLoadingScreen) {
+          router.replace('/seed');
+        }
+      }
     }
-  }, [session, loading, segments]);
+  }, [session, loading, onboardingCompleted, segments]);
 
   return (
     <Stack>

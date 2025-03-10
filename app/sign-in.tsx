@@ -14,7 +14,6 @@ import Animated, {
 } from "react-native-reanimated"
 import Input from "@/components/input";
 import { router } from "expo-router";
-import { useAuth } from "@/context/auth";
 import { createSessionFromUrl, performOAuth } from "@/lib/auth-lib";
 
 const quotes = [
@@ -76,7 +75,6 @@ const AnimatedQuotes = () => {
 const SignIn = () => {
     const [email, setEmail] = useState("")
     const url = Linking.useURL();
-    const { session, loading } = useAuth();
     
     useEffect(() => {
         if (url) {
