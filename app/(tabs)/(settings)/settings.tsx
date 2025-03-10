@@ -7,17 +7,14 @@ import { ChevronRight, LogOut, User } from "lucide-react-native"
 import * as Haptics from "expo-haptics"
 import { router } from "expo-router"
 import { signOut } from "@/lib/auth-lib"
+import { useAuth } from "@/context/auth"
 
 const Settings = () => {
   const [notifications, setNotifications] = useState(true)
   const [hapticFeedback, setHapticFeedback] = useState(true)
 
-  // Mock user data - replace with actual user data
-  const user = {
-    name: "Username",
-    email: "username@email.com",
-    avatar: null,
-  }
+  const { session } = useAuth();
+  const user = session?.user;
 
   const toggleSwitch = (setter: React.Dispatch<React.SetStateAction<boolean>>) => {
     if (hapticFeedback && Platform.OS !== "web") {
@@ -43,15 +40,15 @@ const Settings = () => {
     <SafeAreaView className="flex-1 bg-white">
       {/* Profile Section */}
       <View className="items-center mt-5 mb-6">
-        {user.avatar ? (
-          <Image source={{ uri: user.avatar }} className="w-20 h-20 rounded-full mb-3 p-5" />
+        {user?.user_metadata.avatar_url ? (
+          <Image source={{ uri: user?.user_metadata.avatar_url }} className="w-24 h-24 rounded-full mb-3" />
         ) : (
           <View className="w-20 h-20 rounded-full bg-[#1B1B3A] items-center justify-center mb-3 p-5">
             <User color="white" size={40} />
           </View>
         )}
-        <Text className="font-sora-bold text-[#1B1B3A] text-3xl">{user.name}</Text>
-        <Text className="font-sora-medium text-gray-500 text-xl">{user.email}</Text>
+        <Text className="font-sora-bold text-[#1B1B3A] text-3xl">{user?.user_metadata.full_name}</Text>
+        <Text className="font-sora-medium text-gray-500 text-xl">{user?.email}</Text>
       </View>
 
       {/* Settings List */}
