@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native"
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, SafeAreaView } from "react-native"
 import * as Linking from "expo-linking";
 import { Image } from "react-native"
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -90,7 +90,8 @@ const SignIn = () => {
             behavior={"padding"}
             keyboardVerticalOffset={keyboardVerticalOffset}
         >
-            <View className="flex-1 bg-secondary">
+            
+            <SafeAreaView className="flex-1 bg-secondary">
                 {/* Purple top section with extreme curve */}
                 <View
                     className="justify-end pb-8"
@@ -136,6 +137,7 @@ const SignIn = () => {
                     {/* Google Sign In button */}
                     <TouchableOpacity
                         className="bg-[#e7e7e7] rounded-full py-5 flex-row items-center justify-center mb-8"
+                        style={ Platform.OS === "ios" ? {} : { marginBottom: -15 } }
                         activeOpacity={0.8}
                         onPress={performOAuth}
                     >
@@ -149,7 +151,7 @@ const SignIn = () => {
                         <ChevronRight color="#1B1B3A"/>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </SafeAreaView>
         </KeyboardAvoidingView>
     )
 }

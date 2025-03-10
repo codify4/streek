@@ -9,6 +9,7 @@ import 'react-native-reanimated';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider, useAuth } from "@/context/auth";
 import { useRouter, useSegments } from 'expo-router';
+import { setBackgroundColorAsync } from "expo-navigation-bar";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -83,6 +84,10 @@ export default function RootLayout() {
     'Sora-Thin': require('@/assets/fonts/Sora-Thin.ttf'),
     'Sora-Light': require('@/assets/fonts/Sora-Light.ttf'),
     'Sora-ExtraLight': require('@/assets/fonts/Sora-ExtraLight.ttf'),
+  });
+
+  useEffect(()=>{
+    setBackgroundColorAsync("#00B865");
   });
 
   useEffect(() => {

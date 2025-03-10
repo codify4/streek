@@ -52,10 +52,10 @@ const Settings = () => {
       </View>
 
       {/* Settings List */}
-      <View className="mx-5 bg-white rounded-3xl overflow-hidden mt-5 gap-2 flex justify-between">
+      <View className="mx-5 bg-white overflow-hidden mt-5 gap-2 flex justify-between">
         <View className="gap-2">
           {/* Notifications */}
-          <View className="flex-row items-center justify-between px-5 py-4 border-b border-gray-200 bg-[#F0EFEF] rounded-2xl">
+          <View className="flex-row items-center justify-between px-5 py-4 bg-[#F0EFEF] rounded-2xl">
             <Text className="font-sora-medium text-[#1B1B3A] text-base">Notifications</Text>
             <Switch
               trackColor={{ false: "#D9D9D9", true: "#34C759" }}
@@ -67,7 +67,7 @@ const Settings = () => {
           </View>
 
           {/* Haptic Feedback */}
-          <View className="flex-row items-center justify-between px-5 py-4 border-b border-gray-200 bg-[#F0EFEF] rounded-2xl">
+          <View className="flex-row items-center justify-between px-5 py-4 bg-[#F0EFEF] rounded-2xl">
             <Text className="font-sora-medium text-[#1B1B3A] text-base">Haptic Feedback</Text>
             <Switch
               trackColor={{ false: "#D9D9D9", true: "#34C759" }}
@@ -80,7 +80,7 @@ const Settings = () => {
 
           {/* Terms of Service */}
           <TouchableOpacity
-            className="flex-row items-center justify-between px-5 py-5 border-b border-gray-200 bg-[#F0EFEF] rounded-2xl"
+            className="flex-row items-center justify-between px-5 py-5 bg-[#F0EFEF] rounded-2xl"
             onPress={() => router.push('/(tabs)/(settings)/tos')}
           >
             <Text className="font-sora-medium text-[#1B1B3A] text-base">Terms of Service</Text>

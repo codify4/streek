@@ -3,7 +3,7 @@
 import { router } from "expo-router"
 import type React from "react"
 import { useEffect, useState } from "react"
-import { Text, SafeAreaView, Image, TouchableOpacity, View, Dimensions, StatusBar } from "react-native"
+import { Text, SafeAreaView, Image, TouchableOpacity, View, Dimensions, StatusBar, Platform } from "react-native"
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -154,7 +154,8 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({ onPress, title }) => {
   return (
     <Animated.View entering={FadeInUp.duration(800).delay(600)} style={animatedStyle}>
       <TouchableOpacity
-        className="flex items-center bg-primary rounded-full w-full py-5 px-40 mb-2"
+        className="flex items-center bg-primary rounded-full w-full py-5 mb-2"
+        style={ Platform.OS === "ios" ? { paddingHorizontal: 160 } : { paddingHorizontal: 120 } }
         onPress={onPress}
         onPressIn={onPressIn}
         onPressOut={onPressOut}

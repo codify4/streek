@@ -43,26 +43,32 @@ export const OnboardingInput: React.FC<OnboardingInputProps> = ({
         };
 
         return (
-            <View className="flex-1 ml-2">
-                <View className="bg-transparent rounded-2xl overflow-hidden">
-                    <Picker
-                        selectedValue={selectedAge}
-                        onValueChange={setSelectedAge}
-                        dropdownIconColor="white"
-                        style={{ color: 'black' }}
-                        itemStyle={{ color: 'black' }}
-                    >
-                        {ageValues.map((age) => (
-                            <Picker.Item
-                                key={age}
-                                label={age.toString()}
-                                value={age.toString()}
-                                color={Platform.OS === 'android' ? 'black' : 'black'}
-                            />
-                        ))}
-                    </Picker>
-                </View>
-            </View>
+            <>
+                {Platform.OS === 'ios' ? (
+                    <View className="flex-1 ml-2">
+                        <View className="bg-transparent rounded-2xl overflow-hidden">
+                            <Picker
+                                selectedValue={selectedAge}
+                                onValueChange={setSelectedAge}
+                                dropdownIconColor="white"
+                                style={{ color: 'black' }}
+                                itemStyle={{ color: 'black' }}
+                            >
+                                {ageValues.map((age) => (
+                                    <Picker.Item
+                                        key={age}
+                                        label={age.toString()}
+                                        value={age.toString()}
+                                        color={Platform.OS === 'android' ? 'black' : 'black'}
+                                    />
+                                ))}
+                            </Picker>
+                        </View>
+                    </View>
+                ) : (
+                    <Input mode='outlined' value={value} onChangeText={onChangeText} placeholder={slide.placeholder} keyboardType='numeric' />
+                )}
+            </>
         )
     }
 

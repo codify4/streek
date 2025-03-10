@@ -56,7 +56,7 @@ const Home = () => {
 
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white mt-10">
       <StatusBar style="dark" />
       <Header title='Habits'/>
 

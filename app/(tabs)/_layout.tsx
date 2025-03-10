@@ -47,9 +47,9 @@ export default function TabLayout() {
         screenOptions={{
           headerShown: false,
           tabBarStyle: {
-            backgroundColor: "#1B1B3A",
+            backgroundColor: "#00B865",
             borderTopWidth: 0,
-            minHeight: Platform.OS === "ios" ? 80 : 60,
+            minHeight: Platform.OS === "ios" ? 80 : 65,
             position: "absolute",
             borderTopLeftRadius: 25,
             borderTopRightRadius: 25,
@@ -90,7 +90,7 @@ export default function TabLayout() {
             title: "",
             tabBarButton: () => (
               <TouchableOpacity
-                className="absolute items-center justify-center rounded-full bg-secondary shadow-lg"
+                className="absolute items-center justify-center rounded-full bg-primary shadow-md"
                 style={{
                   width: 70,
                   height: 70,
@@ -98,10 +98,10 @@ export default function TabLayout() {
                   marginLeft: -35,
                   top: -25,
                   shadowColor: "#000",
-                  shadowOffset: { width: 0, height: 4 },
+                  shadowOffset: { width: 0, height: 3 },
                   shadowOpacity: 0.3,
                   shadowRadius: 4,
-                  elevation: 8,
+                  elevation: 5,
                 }}
                 onPress={handleOpenBottomSheet}
               >

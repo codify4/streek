@@ -6,7 +6,7 @@ import Header from "@/components/header"
 
 const Wins = () => {
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white mt-10">
       <Header title="Your Wins" />
       <ScrollView className="flex-1 px-5">
         <StatsSection />
