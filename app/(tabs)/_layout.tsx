@@ -47,7 +47,7 @@ export default function TabLayout() {
         screenOptions={{
           headerShown: false,
           tabBarStyle: {
-            backgroundColor: "#00B865",
+            backgroundColor: "#1B1B3A",
             borderTopWidth: 0,
             minHeight: Platform.OS === "ios" ? 80 : 60,
             position: "absolute",
@@ -90,7 +90,7 @@ export default function TabLayout() {
             title: "",
             tabBarButton: () => (
               <TouchableOpacity
-                className="absolute items-center justify-center rounded-full bg-primary shadow-lg"
+                className="absolute items-center justify-center rounded-full bg-secondary shadow-lg"
                 style={{
                   width: 70,
                   height: 70,
