@@ -113,7 +113,7 @@ const AddHabit: React.FC<AddHabitProps> = ({ onClose, onHabitCreated }) => {
                 disabled={isLoading}
                 activeOpacity={0.7}
             >
-                <Text className="text-white text-xl font-sora-semibold">{isLoading ? "Creating..." : "Create Routine"}</Text>
+                <Text className="text-white text-xl font-sora-semibold">{isLoading ? "Creating..." : "Create Habit"}</Text>
             </TouchableOpacity>
         </>
     );
