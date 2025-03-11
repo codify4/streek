@@ -9,8 +9,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import BotSheet from "@/components/bot-sheet"
 import type BottomSheet from "@gorhom/bottom-sheet"
 import * as Haptics from "expo-haptics"
-import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider } from "reanimated-color-picker"
-import Input from "@/components/input"
 import AddHabit from "@/components/add-habit"
 import { Habit } from "@/lib/habits"
 

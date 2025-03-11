@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { View, SafeAreaView, FlatList, Platform, Alert, RefreshControl } from "react-native"
+import { View, SafeAreaView, FlatList, Platform, RefreshControl } from "react-native"
 import Calendar from "@/components/home/calendar"
 import HabitCard from "@/components/home/habit-card"
 import { calendarDays, type CalendarDay } from "@/constants/data"

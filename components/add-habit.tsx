@@ -16,7 +16,6 @@ import { createHabit } from "@/lib/habits"
 import * as Haptics from "expo-haptics"
 import { useAuth } from "@/context/auth"
 
-// Add onClose prop to handle closing the bottom sheet
 interface AddHabitProps {
   onClose: () => void
   onHabitCreated?: (habit: any) => void // Optional callback to refresh habits list
@@ -24,7 +23,7 @@ interface AddHabitProps {
 
 const AddHabit: React.FC<AddHabitProps> = ({ onClose, onHabitCreated }) => {
     const [title, setTitle] = useState("")
-    const [color, setColor] = useState("#ffffff")
+    const [color, setColor] = useState("#00B865")
     const [isLoading, setIsLoading] = useState(false)
 
     const { session } = useAuth()
