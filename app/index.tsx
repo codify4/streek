@@ -155,7 +155,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({ onPress, title }) => {
     <Animated.View entering={FadeInUp.duration(800).delay(600)} style={animatedStyle}>
       <TouchableOpacity
         className="flex items-center bg-primary rounded-full w-full py-5 mb-2"
-        style={ Platform.OS === "ios" ? { paddingHorizontal: 160 } : { paddingHorizontal: 120 } }
+        style={ Platform.OS === "ios" ? { paddingHorizontal: 140 } : { paddingHorizontal: 120 } }
         onPress={onPress}
         onPressIn={onPressIn}
         onPressOut={onPressOut}

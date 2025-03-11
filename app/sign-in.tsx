@@ -90,8 +90,7 @@ const SignIn = () => {
             behavior={"padding"}
             keyboardVerticalOffset={keyboardVerticalOffset}
         >
-            
-            <SafeAreaView className="flex-1 bg-secondary">
+            <View className="flex-1 bg-secondary">
                 {/* Purple top section with extreme curve */}
                 <View
                     className="justify-end pb-8"
@@ -137,7 +136,6 @@ const SignIn = () => {
                     {/* Google Sign In button */}
                     <TouchableOpacity
                         className="bg-[#e7e7e7] rounded-full py-5 flex-row items-center justify-center mb-8"
-                        style={ Platform.OS === "ios" ? {} : { marginBottom: -15 } }
                         activeOpacity={0.8}
                         onPress={performOAuth}
                     >
@@ -151,7 +149,7 @@ const SignIn = () => {
                         <ChevronRight color="#1B1B3A"/>
                     </TouchableOpacity>
                 </View>
-            </SafeAreaView>
+            </View>
         </KeyboardAvoidingView>
     )
 }

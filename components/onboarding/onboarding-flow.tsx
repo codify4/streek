@@ -80,7 +80,7 @@ export const OnboardingInput: React.FC<OnboardingInputProps> = ({
         return (
             <ScrollView 
                 showsVerticalScrollIndicator={false}
-                className='space-y-3'
+                className='space-y-3 mb-5'
             >
                 {slide.choices?.map((choice, index) => (
                     <TouchableOpacity

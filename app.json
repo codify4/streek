@@ -55,7 +55,8 @@
         "foregroundImage": "./assets/icons/adaptive-icon.png",
         "monochromeImage": "./assets/icons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.ijon007.streek"
     },
     "web": {
       "bundler": "metro",
@@ -79,6 +80,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "bf9cc056-e2be-4075-b0b5-838353443ef4"
+      }
     }
   }
 }
