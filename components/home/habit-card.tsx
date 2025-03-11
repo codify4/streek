@@ -1,12 +1,12 @@
 "use client"
 
-import type { Habit } from "@/constants/data"
 import { Flame, Check } from "lucide-react-native"
 import { useRef, useState } from "react"
 import { View, Text, Dimensions } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, runOnJS, Layout } from "react-native-reanimated"
 import LottieView from "lottie-react-native";
+import { Habit } from "@/lib/habits"
 
 interface HabitCardProps {
   habit: Habit
@@ -122,7 +122,7 @@ const HabitCard = ({ habit, onComplete, onDelete }: HabitCardProps) => {
                 loop
                 style={{ width: 30, height: 30 }}
               />
-              <Text className="text-secondary font-sora-semibold text-xl ml-1">{habit.days} days</Text>
+              <Text className="text-secondary font-sora-semibold text-xl ml-1">{habit.streak} days</Text>
             </View>
           </View>
 
@@ -132,7 +132,7 @@ const HabitCard = ({ habit, onComplete, onDelete }: HabitCardProps) => {
               <View
                 className="rounded-full"
                 style={{
-                  width: `${isCompleted ? 100 : habit.progress}%`,
+                  width: `${isCompleted ? 100 : 50}%`,
                   height: 10,
                   backgroundColor: habit.color,
                 }}

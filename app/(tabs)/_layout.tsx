@@ -3,7 +3,7 @@
 import { router, Tabs } from "expo-router"
 import { Home, Trophy, Plus, ChevronLeft } from "lucide-react-native"
 import type React from "react"
-import { useRef, useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import { View, TouchableOpacity, Platform, Text } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import BotSheet from "@/components/bot-sheet"
@@ -11,6 +11,8 @@ import type BottomSheet from "@gorhom/bottom-sheet"
 import * as Haptics from "expo-haptics"
 import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider } from "reanimated-color-picker"
 import Input from "@/components/input"
+import AddHabit from "@/components/add-habit"
+import { Habit } from "@/lib/habits"
 
 function TabBarIcon(props: {
   name: React.ElementType
@@ -32,14 +34,25 @@ export default function TabLayout() {
     bottomSheetRef.current?.expand()
   }
 
-  const onSelectColor = ({ hex }: { hex: string }) => {
-    // do something with the selected color.
-    console.log(hex)
-  }
+  const handleCloseBottomSheet = useCallback(() => {
+    bottomSheetRef.current?.close()
+  }, [])
 
-  const onChangeText = (text: string) => {
-    setValue(text)
-  }
+  const handleHabitCreated = useCallback(
+    (habit: Habit) => {
+      // Close the bottom sheet
+      handleCloseBottomSheet()
+
+      // Navigate to home tab to see the new habit
+      // This is optional - you can remove this if you don't want to navigate
+      router.push("/(tabs)/home")
+
+      // You could also emit an event here that the home screen listens for
+      // to refresh its habit list, if you prefer that approach
+    },
+    [handleCloseBottomSheet],
+  )
+
 
   return (
     <>
@@ -190,34 +203,7 @@ export default function TabLayout() {
       </Tabs>
 
       <BotSheet ref={bottomSheetRef} snapPoints={["80%"]}>
-        <Text className="text-secondary font-sora-bold text-3xl mb-5">Add a new habit</Text>
-        <View className="flex-col items-start justify-center" style={{ width: "90%" }}>
-          <Text className="text-secondary font-sora-semibold text-xl mb-2">Enter the name of your new habit</Text>
-          <Input
-            mode="outlined"
-            value={value}
-            onChangeText={onChangeText}
-            placeholder={"Enter habit name"}
-            keyboardType="default"
-            moreStyles={{ width: "100%", marginBottom: 20, backgroundColor: "#ffffff", fontFamily: "Sora-Medium" }}
-          />
-        </View>
-        <View className="flex-col items-start justify-center" style={{ width: "90%" }}>
-          <Text className="text-secondary font-sora-semibold text-xl mb-2">Select a color</Text>
-          <ColorPicker style={{ width: "100%", gap: 10 }} value="red" onComplete={onSelectColor}>
-            <Preview />
-            <Panel1 />
-            <HueSlider />
-            <OpacitySlider />
-            <Swatches />
-          </ColorPicker>
-        </View>
-        <TouchableOpacity
-          className="bg-primary p-5 rounded-full items-center mb-8 flex-row justify-center gap-2 mt-5"
-          style={{ width: "90%" }}
-        >
-          <Text className="text-white text-xl font-sora-semibold">Create Routine</Text>
-        </TouchableOpacity>
+        <AddHabit onClose={handleCloseBottomSheet} onHabitCreated={handleHabitCreated} />
       </BotSheet>
     </>
   )
