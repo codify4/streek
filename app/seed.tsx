@@ -18,7 +18,7 @@ const Seed = () => {
             <MaterialCommunityIcons name="seed" size={200} color="black" />        
           </View>
           
-          <TouchableOpacity className="flex items-center bg-primary rounded-full w-full py-5" activeOpacity={0.8} onPress={() => router.push('/onboarding')} style={ Platform.OS === "ios" ? { paddingHorizontal: 128 } : { paddingHorizontal: 90 } }>
+          <TouchableOpacity className="flex items-center bg-primary rounded-full w-full py-5" activeOpacity={0.8} onPress={() => router.push('/onboarding')} style={ Platform.OS === "ios" ? { paddingHorizontal: 80 } : { paddingHorizontal: 90 } }>
             <Text className="font-sora-semibold text-xl text-white text-center">Grow your seedling</Text>
           </TouchableOpacity>
         </View>
