@@ -58,12 +58,32 @@ export interface Habit {
     isActive: boolean;
   }
   
-  export const calendarDays: CalendarDay[] = [
-    { day: 'Mon', date: 3, isActive: false },
-    { day: 'Tue', date: 4, isActive: false },
-    { day: 'Wed', date: 5, isActive: true },
-    { day: 'Thu', date: 6, isActive: false },
-    { day: 'Fri', date: 7, isActive: false },
-    { day: 'Sat', date: 8, isActive: false },
-    { day: 'Sun', date: 9, isActive: false },
-  ];
+  export const getCalendarDays = (): CalendarDay[] => {
+    const today = new Date();
+    const currentDay = today.getDay(); // 0 (Sunday) to 6 (Saturday)
+    const currentDate = today.getDate();
+
+    // Calculate the date of Monday (start of week)
+    const monday = new Date(today);
+    monday.setDate(currentDate - ((currentDay === 0 ? 7 : currentDay) - 1));
+
+    const days: CalendarDay[] = [];
+    const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    // Generate 7 days starting from Monday
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(monday);
+      date.setDate(monday.getDate() + i);
+      
+      days.push({
+        day: dayNames[i],
+        date: date.getDate(),
+        isActive: date.getDate() === currentDate
+      });
+    }
+
+    return days;
+  };
+
+  // Replace the hardcoded calendarDays with a function call
+  export const calendarDays = getCalendarDays();

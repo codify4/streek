@@ -1,15 +1,43 @@
 // components/Calendar.tsx
-import { CalendarDay } from '@/constants/data';
-import React from 'react';
+import { CalendarDay, getCalendarDays } from '@/constants/data';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 
 interface CalendarProps {
-  days: CalendarDay[];
   onSelectDay: (day: CalendarDay) => void;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ days, onSelectDay }) => {
-  const today = new Date().getDate();
+const Calendar = ({ onSelectDay }: CalendarProps) => {
+  const [days, setDays] = useState<CalendarDay[]>(getCalendarDays());
+  const [lastCheckedDay, setLastCheckedDay] = useState<number>(new Date().getDay());
+  const today = new Date();
+  const currentDate = today.getDate();
+  const currentDay = today.getDay();
+  
+  useEffect(() => {
+    setLastCheckedDay(currentDay);
+    
+    const dayCheckInterval = setInterval(() => {
+      const now = new Date();
+      const nowDay = now.getDay();
+      
+      // If it's Monday or the day has changed
+      if (nowDay !== lastCheckedDay) {
+        // Update the calendar days
+        const newDays = getCalendarDays();
+        setDays(newDays);
+        setLastCheckedDay(nowDay);
+        
+        // Reset selection to today
+        const todayIndex = newDays.findIndex(day => day.date === now.getDate());
+        if (todayIndex >= 0) {
+          onSelectDay(newDays[todayIndex]);
+        }
+      }
+    }, 3600000); // Check every hour
+    
+    return () => clearInterval(dayCheckInterval);
+  }, [lastCheckedDay, onSelectDay]);
 
   return (
     <View className="w-full px-4 py-3 bg-[#F0EFEF] rounded-3xl mb-5 mt-2">
@@ -19,8 +47,8 @@ const Calendar: React.FC<CalendarProps> = ({ days, onSelectDay }) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           renderItem={({ item: day, index }) => {
-            const isToday = day.date === today;
-            const isPast = day.date < today;
+            const isToday = day.date === currentDate;
+            const isPast = day.date < currentDate;
 
             return (
               <TouchableOpacity
@@ -40,7 +68,7 @@ const Calendar: React.FC<CalendarProps> = ({ days, onSelectDay }) => {
           }}
           keyExtractor={(_, index) => index.toString()}
         />
-      </View>
+      </View> 
     </View>
   );
 };
