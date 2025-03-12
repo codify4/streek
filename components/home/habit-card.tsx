@@ -1,12 +1,12 @@
 "use client"
 
-import { Flame, Check } from "lucide-react-native"
-import { useRef, useState } from "react"
+import { Check } from "lucide-react-native"
+import { useRef, useState, useEffect } from "react"
 import { View, Text, Dimensions } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, runOnJS, Layout } from "react-native-reanimated"
-import LottieView from "lottie-react-native";
-import { Habit } from "@/lib/habits"
+import LottieView from "lottie-react-native"
+import type { Habit } from "@/lib/habits"
 
 interface HabitCardProps {
   habit: Habit
@@ -23,9 +23,20 @@ const HabitCard = ({ habit, onComplete, onDelete }: HabitCardProps) => {
   const [isCompleted, setIsCompleted] = useState(false)
   const isDeleting = useRef(false)
 
+  // Initialize isCompleted state based on habit.completed_today
+  useEffect(() => {
+    setIsCompleted(habit.completed_today || false)
+  }, [habit.completed_today])
+
   const handleComplete = (id: string) => {
-    setIsCompleted(true)
-    onComplete(id)
+    // Only mark as completed if not already completed
+    if (!isCompleted) {
+      setIsCompleted(true)
+      onComplete(id)
+    } else {
+      // If already completed, just bounce back
+      translateX.value = withTiming(0, { duration: 300 })
+    }
   }
 
   const panGesture = Gesture.Pan()
@@ -78,7 +89,7 @@ const HabitCard = ({ habit, onComplete, onDelete }: HabitCardProps) => {
             rLeftActionStyle,
           ]}
         >
-          <Text className="text-white font-sora-bold text-lg ml-4">Done</Text>
+          <Text className="text-white font-sora-bold text-lg ml-4">{isCompleted ? "Already Done" : "Done"}</Text>
         </Animated.View>
 
         <Animated.View
@@ -147,3 +158,4 @@ const HabitCard = ({ habit, onComplete, onDelete }: HabitCardProps) => {
 }
 
 export default HabitCard
+
