@@ -1,7 +1,7 @@
 import type React from "react"
-import { View, Text } from "react-native"
+import { View, Text, ActivityIndicator } from "react-native"
 import { Flame, RefreshCw, Target } from "lucide-react-native"
-import { stats } from "@/constants/wins-data"
+import type { Stat } from "@/constants/wins-data"
 
 interface StatCardProps {
   title: string
@@ -22,7 +22,12 @@ const StatCard = ({ title, value, subtitle, icon }: StatCardProps) => {
     )
 }
 
-const StatsSection = () => {
+interface StatsSectionProps {
+  stats: Stat[]
+  loading?: boolean
+}
+
+const StatsSection = ({ stats, loading = false }: StatsSectionProps) => {
     const getIcon = (iconName: string) => {
         switch (iconName) {
             case "flame":
@@ -34,6 +39,14 @@ const StatsSection = () => {
             default:
                 return null
         }
+    }
+
+    if (loading) {
+        return (
+            <View className="flex-row justify-between gap-4 mb-6 items-center">
+                <ActivityIndicator size="large" color="#00B865" />
+            </View>
+        )
     }
 
     return (
@@ -52,3 +65,4 @@ const StatsSection = () => {
 }
 
 export default StatsSection
+
