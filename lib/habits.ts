@@ -11,29 +11,25 @@ export interface Habit {
   created_at?: string
   completed_dates?: string[]
   completed_today?: boolean
-  last_completed_date?: string | null // Track the last date the habit was completed
+  last_completed_date?: string | null
 }
 
-// Interface to track which habits are completed on which dates
 export interface HabitCompletions {
   [habitId: string]: {
     [date: string]: boolean
   }
 }
 
-// Get today's date in YYYY-MM-DD format
 export const getTodayDateString = (): string => {
   return new Date().toISOString().split("T")[0]
 }
 
-// Get yesterday's date in YYYY-MM-DD format
 export const getYesterdayDateString = (): string => {
   const yesterday = new Date()
   yesterday.setDate(yesterday.getDate() - 1)
   return yesterday.toISOString().split("T")[0]
 }
 
-// Check if a date is consecutive to another date
 export const isConsecutiveDay = (prevDate: string, currentDate: string): boolean => {
   if (!prevDate || !currentDate) return false
 
@@ -52,7 +48,6 @@ export const isConsecutiveDay = (prevDate: string, currentDate: string): boolean
   return diffDays === 1
 }
 
-// Read all habits
 export const getHabits = async (userId: string): Promise<Habit[] | null> => {
   try {
     if (!userId) {
@@ -78,7 +73,6 @@ export const getHabits = async (userId: string): Promise<Habit[] | null> => {
   }
 }
 
-// Get habit completions for all habits
 export const getHabitCompletions = async (userId: string): Promise<HabitCompletions | null> => {
   try {
     if (!userId) {
@@ -118,47 +112,6 @@ export const getHabitCompletions = async (userId: string): Promise<HabitCompleti
     console.error("Error fetching habit completions:", error.message)
     return null
   }
-}
-
-// Get the most recent completion date for a habit
-export const getLastCompletionDate = (habitCompletions: HabitCompletions, habitId: string): string | null => {
-  if (!habitCompletions[habitId]) return null
-
-  // Get all completion dates for this habit
-  const dates = Object.keys(habitCompletions[habitId])
-  if (dates.length === 0) return null
-
-  // Sort dates in descending order (most recent first)
-  dates.sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-
-  // Return the most recent date
-  return dates[0]
-}
-
-// Check if a habit's streak should be reset
-export const shouldResetStreak = (habitCompletions: HabitCompletions, habitId: string): boolean => {
-  const today = getTodayDateString()
-  const yesterday = getYesterdayDateString()
-
-  // If completed today, streak is valid
-  if (isHabitCompletedOnDate(habitCompletions, habitId, today)) {
-    return false
-  }
-
-  // If completed yesterday, streak is still valid
-  if (isHabitCompletedOnDate(habitCompletions, habitId, yesterday)) {
-    return false
-  }
-
-  // Get the last completion date
-  const lastCompletionDate = getLastCompletionDate(habitCompletions, habitId)
-
-  // If never completed or last completion is before yesterday, reset streak
-  if (!lastCompletionDate || new Date(lastCompletionDate) < new Date(yesterday)) {
-    return true
-  }
-
-  return false
 }
 
 export const createHabit = async (habit: Omit<Habit, "id">): Promise<Habit | null> => {
@@ -278,4 +231,45 @@ export const resetHabitStreak = async (habitId: string): Promise<boolean> => {
     console.error("Error resetting habit streak:", error.message)
     return false
   }
+}
+
+// Get the most recent completion date for a habit
+export const getLastCompletionDate = (habitCompletions: HabitCompletions, habitId: string): string | null => {
+  if (!habitCompletions[habitId]) return null
+
+  // Get all completion dates for this habit
+  const dates = Object.keys(habitCompletions[habitId])
+  if (dates.length === 0) return null
+
+  // Sort dates in descending order (most recent first)
+  dates.sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+
+  // Return the most recent date
+  return dates[0]
+}
+
+// Check if a habit's streak should be reset
+export const shouldResetStreak = (habitCompletions: HabitCompletions, habitId: string): boolean => {
+  const today = getTodayDateString()
+  const yesterday = getYesterdayDateString()
+
+  // If completed today, streak is valid
+  if (isHabitCompletedOnDate(habitCompletions, habitId, today)) {
+    return false
+  }
+
+  // If completed yesterday, streak is still valid
+  if (isHabitCompletedOnDate(habitCompletions, habitId, yesterday)) {
+    return false
+  }
+
+  // Get the last completion date
+  const lastCompletionDate = getLastCompletionDate(habitCompletions, habitId)
+
+  // If never completed or last completion is before yesterday, reset streak
+  if (!lastCompletionDate || new Date(lastCompletionDate) < new Date(yesterday)) {
+    return true
+  }
+
+  return false
 }
