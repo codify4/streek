@@ -22,7 +22,7 @@ const Home = () => {
   const userId = session?.user?.id
 
   // Use our custom hook to get habits with real-time updates
-  const { habits, loading, refreshing, onRefresh, completeHabit, removeHabit } = useHabits(userId)
+  const { habits, loading, refreshing, onRefresh, completeHabit, removeHabit, hasCompletionsOnDate } = useHabits(userId)
 
   const handleSelectDay = (day: CalendarDay) => {
     setSelectedDay(day)
@@ -46,7 +46,7 @@ const Home = () => {
       <Header title="Habits" />
 
       <View className="px-5">
-        <Calendar onSelectDay={handleSelectDay} />
+        <Calendar onSelectDay={handleSelectDay} hasCompletionsOnDate={hasCompletionsOnDate} />
       </View>
 
       <GestureDetector gesture={scrollGesture}>

@@ -12,6 +12,11 @@ export interface Habit {
   streak: number
   user_id: string
   created_at?: string
+  completed_dates?: string[]
+}
+
+export interface CompletionsByDate {
+  [date: string]: boolean // date string in format 'YYYY-MM-DD'
 }
 
 // Read all habits
@@ -33,14 +38,78 @@ export const getHabits = async (userId: string): Promise<Habit[] | null> => {
       throw error
     }
 
-    return habits
+    return habits;
   } catch (error: any) {
     console.error("Error fetching habits:", error.message)
     return null
   }
 }
 
-// Create a new habit
+// Get habit completions for the last 7 days
+export const getHabitCompletions = async (userId: string): Promise<CompletionsByDate | null> => {
+  try {
+    if (!userId) {
+      console.error("User ID is required to fetch habit completions")
+      return null
+    }
+
+    // Get the date 7 days ago
+    const sevenDaysAgo = new Date()
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+
+    const { data, error } = await supabase
+      .from("habit_completion")
+      .select("completion_date")
+      .eq("user_id", userId)
+      .gte("completion_date", sevenDaysAgo.toISOString().split("T")[0])
+
+    if (error) {
+      console.error("Error fetching habit completions:", error.message)
+      throw error
+    }
+
+    // Convert to a map of date -> true
+    const completionsByDate: CompletionsByDate = {}
+    if (data) {
+      data.forEach((completion) => {
+        // Format date as YYYY-MM-DD
+        const date = completion.completion_date
+        completionsByDate[date] = true
+      })
+    }
+
+    return completionsByDate
+  } catch (error: any) {
+    console.error("Error fetching habit completions:", error.message)
+    return null
+  }
+}
+
+// Record a habit completion
+export const recordHabitCompletion = async (
+  habitId: string,
+  userId: string,
+  date: string = new Date().toISOString().split("T")[0],
+): Promise<boolean> => {
+  try {
+    const { error } = await supabase.from("habit_completion").insert({
+      habit_id: habitId,
+      user_id: userId,
+      completion_date: date,
+    })
+
+    if (error) {
+      console.error("Error recording habit completion:", error.message)
+      throw error
+    }
+
+    return true
+  } catch (error: any) {
+    console.error("Error recording habit completion:", error.message)
+    return false
+  }
+}
+
 export const createHabit = async (habit: Omit<Habit, "id">): Promise<Habit | null> => {
   try {
     if (!habit.user_id) {
@@ -62,7 +131,6 @@ export const createHabit = async (habit: Omit<Habit, "id">): Promise<Habit | nul
   }
 }
 
-// Update a habit
 export const updateHabit = async (id: string, updates: Partial<Habit>): Promise<Habit | null> => {
   try {
     if (!id) {
@@ -84,7 +152,6 @@ export const updateHabit = async (id: string, updates: Partial<Habit>): Promise<
   }
 }
 
-// Delete a habit
 export const deleteHabit = async (id: string): Promise<boolean> => {
   try {
     if (!id) {
@@ -109,8 +176,19 @@ export const deleteHabit = async (id: string): Promise<boolean> => {
 // Custom hook for habits with real-time updates
 export const useHabits = (userId: string | undefined) => {
   const [habits, setHabits] = useState<Habit[]>([])
+  const [completionsByDate, setCompletionsByDate] = useState<CompletionsByDate>({})
   const [loading, setLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
+
+  // Fetch habit completions
+  const loadCompletions = useCallback(async () => {
+    if (!userId) return
+
+    const completions = await getHabitCompletions(userId)
+    if (completions) {
+      setCompletionsByDate(completions)
+    }
+  }, [userId])
 
   // Fetch habits function
   const loadHabits = useCallback(async () => {
@@ -125,9 +203,11 @@ export const useHabits = (userId: string | undefined) => {
       if (fetchedHabits) {
         setHabits(fetchedHabits)
       } else {
-        // If null is returned, there was an error
         Alert.alert("Error", "Failed to load habits. Please try again.")
       }
+
+      // Also load completions
+      await loadCompletions()
     } catch (error) {
       console.error("Error in loadHabits:", error)
       Alert.alert("Error", "Something went wrong while loading your habits.")
@@ -135,17 +215,18 @@ export const useHabits = (userId: string | undefined) => {
       setLoading(false)
       setRefreshing(false)
     }
-  }, [userId])
+  }, [userId, loadCompletions])
 
   // Set up Supabase real-time subscription
   useEffect(() => {
     if (!userId) return
 
-    let subscription: RealtimeChannel
+    let habitsSubscription: RealtimeChannel
+    let completionsSubscription: RealtimeChannel
 
-    const setupSubscription = async () => {
+    const setupSubscriptions = async () => {
       // Subscribe to changes on the habit table for the current user
-      subscription = supabase
+      habitsSubscription = supabase
         .channel("habit-changes")
         .on(
           "postgres_changes",
@@ -156,7 +237,7 @@ export const useHabits = (userId: string | undefined) => {
             filter: `user_id=eq.${userId}`, // Only listen to changes for the current user
           },
           (payload) => {
-            console.log("Real-time change received:", payload)
+            console.log("Real-time habit change received:", payload)
 
             // Handle different types of changes
             if (payload.eventType === "INSERT") {
@@ -174,17 +255,40 @@ export const useHabits = (userId: string | undefined) => {
           },
         )
         .subscribe()
+
+      // Subscribe to changes on the habit_completion table for the current user
+      completionsSubscription = supabase
+        .channel("completion-changes")
+        .on(
+          "postgres_changes",
+          {
+            event: "*", // Listen to all events (INSERT, UPDATE, DELETE)
+            schema: "public",
+            table: "habit_completion", // Make sure this matches your table name
+            filter: `user_id=eq.${userId}`, // Only listen to changes for the current user
+          },
+          (payload) => {
+            console.log("Real-time completion change received:", payload)
+
+            // Reload completions when they change
+            loadCompletions()
+          },
+        )
+        .subscribe()
     }
 
-    setupSubscription()
+    setupSubscriptions()
 
-    // Clean up subscription when component unmounts
+    // Clean up subscriptions when component unmounts
     return () => {
-      if (subscription) {
-        supabase.removeChannel(subscription)
+      if (habitsSubscription) {
+        supabase.removeChannel(habitsSubscription)
+      }
+      if (completionsSubscription) {
+        supabase.removeChannel(completionsSubscription)
       }
     }
-  }, [userId])
+  }, [userId, loadCompletions])
 
   // Fetch habits on hook initialization
   useEffect(() => {
@@ -196,6 +300,8 @@ export const useHabits = (userId: string | undefined) => {
   // Handle completing a habit
   const completeHabit = async (id: string) => {
     try {
+      if (!userId) return
+
       // Find the habit to update
       const habit = habits.find((h) => h.id === id)
       if (!habit) return
@@ -203,8 +309,20 @@ export const useHabits = (userId: string | undefined) => {
       // Optimistically update UI
       setHabits((prevHabits) => prevHabits.map((h) => (h.id === id ? { ...h, streak: (h.streak || 0) + 1 } : h)))
 
+      // Get today's date in YYYY-MM-DD format
+      const today = new Date().toISOString().split("T")[0]
+
+      // Optimistically update completions
+      setCompletionsByDate((prev) => ({
+        ...prev,
+        [today]: true,
+      }))
+
       // Update habit in Supabase
       const updatedHabit = await updateHabit(id, { streak: (habit.streak || 0) + 1 })
+
+      // Record the completion
+      await recordHabitCompletion(id, userId)
 
       if (!updatedHabit) {
         // If update fails, revert the optimistic update
@@ -252,6 +370,14 @@ export const useHabits = (userId: string | undefined) => {
     loadHabits()
   }, [loadHabits])
 
+  // Helper function to check if a date has any completions
+  const hasCompletionsOnDate = useCallback(
+    (date: string) => {
+      return !!completionsByDate[date]
+    },
+    [completionsByDate],
+  )
+
   return {
     habits,
     loading,
@@ -259,6 +385,8 @@ export const useHabits = (userId: string | undefined) => {
     onRefresh,
     completeHabit,
     removeHabit,
+    completionsByDate,
+    hasCompletionsOnDate,
   }
 }
 
