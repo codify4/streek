@@ -9,9 +9,9 @@ import * as Haptics from "expo-haptics"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Header from "@/components/header"
 import { StatusBar } from "expo-status-bar"
-import { useHabits } from "@/lib/habits"
 import { useAuth } from "@/context/auth"
 import { Text } from "react-native"
+import { useHabits } from "@/hooks/use-habits"
 
 const Home = () => {
   const [selectedDay, setSelectedDay] = useState<CalendarDay>(
