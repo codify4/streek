@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useCallback } from "react"
+import React, { useState, useCallback, useEffect } from "react"
 import { View, Text, TouchableOpacity, Dimensions } from "react-native"
 import Modal from "react-native-modal"
 import Animated, {
@@ -13,6 +13,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated"
 import { treeProgress } from "@/constants/wins-data"
+import { Sparkles } from "lucide-react-native"
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window")
 
@@ -20,6 +21,32 @@ const TreeSection = () => {
   const [isModalVisible, setModalVisible] = useState(false)
   const rotation = useSharedValue(0)
   const scale = useSharedValue(1)
+  const breathe = useSharedValue(1)
+  const sparkleOpacity = useSharedValue(0)
+  const sparkleScale = useSharedValue(0.8)
+
+  // Start breathing animation for the tree
+  useEffect(() => {
+    breathe.value = withRepeat(
+      withSequence(
+        withTiming(1.05, { duration: 2000, easing: Easing.inOut(Easing.sin) }),
+        withTiming(0.95, { duration: 2000, easing: Easing.inOut(Easing.sin) }),
+      ),
+      -1, // Infinite repeat
+      true, // Reverse
+    )
+
+    // Sparkle animation
+    const animateSparkles = () => {
+      sparkleOpacity.value = withSequence(withTiming(0.8, { duration: 1000 }), withTiming(0, { duration: 1000 }))
+      sparkleScale.value = withSequence(withTiming(1.2, { duration: 1000 }), withTiming(0.8, { duration: 1000 }))
+
+      // Schedule next animation after a random delay
+      setTimeout(animateSparkles, Math.random() * 3000 + 2000)
+    }
+
+    animateSparkles()
+  }, [])
 
   const toggleModal = useCallback(() => {
     setModalVisible(!isModalVisible)
@@ -37,7 +64,14 @@ const TreeSection = () => {
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
-      transform: [{ rotate: `${rotation.value}deg` }, { scale: scale.value }],
+      transform: [{ rotate: `${rotation.value}deg` }, { scale: scale.value * breathe.value }],
+    }
+  })
+
+  const sparkleStyles = useAnimatedStyle(() => {
+    return {
+      opacity: sparkleOpacity.value,
+      transform: [{ scale: sparkleScale.value }],
     }
   })
 
@@ -61,11 +95,75 @@ const TreeSection = () => {
 
   return (
     <>
-      <TouchableOpacity onPress={toggleModal}>
-        <View className="bg-secondary/10 rounded-3xl p-6 mb-8">
+      <TouchableOpacity onPress={toggleModal} activeOpacity={0.9}>
+        <View
+          style={{
+            borderRadius: 24,
+            padding: 24,
+            backgroundColor: "#1B1B3A0D",
+            marginBottom: 32,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.05,
+            shadowRadius: 8,
+            elevation: 2,
+          }}
+        >
           <Text className="font-sora-bold text-secondary text-2xl mb-4">My Tree</Text>
 
-          <View className="bg-white/60 rounded-3xl items-center justify-center p-10 mb-6">
+          <View
+            style={{
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              borderRadius: 24,
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 40,
+              marginBottom: 24,
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            {/* Background gradient */}
+            <View
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: 60,
+                backgroundColor: "rgba(0, 184, 101, 0.1)",
+                borderBottomLeftRadius: 24,
+                borderBottomRightRadius: 24,
+              }}
+            />
+
+            {/* Sparkles */}
+            <Animated.View
+              style={[
+                sparkleStyles,
+                {
+                  position: "absolute",
+                  top: "20%",
+                  right: "25%",
+                },
+              ]}
+            >
+              <Sparkles size={20} color="#FFD700" />
+            </Animated.View>
+
+            <Animated.View
+              style={[
+                sparkleStyles,
+                {
+                  position: "absolute",
+                  top: "40%",
+                  left: "30%",
+                },
+              ]}
+            >
+              <Sparkles size={16} color="#FFD700" />
+            </Animated.View>
+
             <Animated.Text style={animatedStyles} className="text-8xl">
               {getTreeEmoji(treeProgress)}
             </Animated.Text>
@@ -73,10 +171,29 @@ const TreeSection = () => {
 
           <View className="flex-row items-center">
             <Text className="mr-2 text-2xl">🌰</Text>
-            <View className="flex-1 h-4 bg-white rounded-full overflow-hidden">
-              <View className="h-full bg-primary rounded-full" style={{ width: `${treeProgress}%` }} />
+            <View
+              style={{
+                flex: 1,
+                height: 16,
+                backgroundColor: "rgba(255, 255, 255, 0.8)",
+                borderRadius: 999,
+                overflow: "hidden",
+              }}
+            >
+              <View
+                style={{
+                  height: "100%",
+                  width: `${treeProgress}%`,
+                  backgroundColor: "#00B865",
+                  borderRadius: 999,
+                }}
+              />
             </View>
             <Text className="ml-2 text-2xl">🌴</Text>
+          </View>
+
+          <View className="flex-row justify-center mt-3">
+            <Text className="font-sora-semibold text-secondary/70 text-sm">{treeProgress}% Growth</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -90,24 +207,62 @@ const TreeSection = () => {
         animationIn="zoomIn"
         animationOut="zoomOut"
       >
-        <View className="bg-white rounded-3xl p-6" style={{ width: SCREEN_WIDTH * 0.9 }}>
+        <View
+          style={{
+            backgroundColor: "white",
+            borderRadius: 24,
+            padding: 24,
+            width: SCREEN_WIDTH * 0.9,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.1,
+            shadowRadius: 12,
+            elevation: 5,
+          }}
+        >
           <Text className="font-sora-bold text-secondary text-3xl mb-6">Tree Progress</Text>
 
           <Animated.View style={animatedStyles} className="items-center mb-8">
-            <Text className="text-9xl mb-4">{getTreeEmoji(treeProgress)}</Text>
+            <View
+              style={{
+                width: 140,
+                height: 140,
+                borderRadius: 70,
+                backgroundColor: "rgba(0, 184, 101, 0.1)",
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: 16,
+              }}
+            >
+              <Text className="text-9xl">{getTreeEmoji(treeProgress)}</Text>
+            </View>
             <Text className="font-sora-semibold text-secondary text-2xl">{treeProgress}% Growth</Text>
           </Animated.View>
 
           <View className="mb-6">
             <Text className="font-sora-medium text-secondary text-lg mb-2">Growth Progress</Text>
-            <View className="h-3 bg-[#E2E8F0] rounded-full overflow-hidden">
+            <View
+              style={{
+                backgroundColor: "#E2E8F0",
+                borderRadius: 999,
+                overflow: "hidden",
+              }}
+            >
               <Animated.View className="h-3 bg-primary rounded-full" style={progressBarStyles} />
             </View>
           </View>
 
-          <View className="mb-6">
-            <Text className="font-sora-medium text-secondary text-lg mb-2">Tree Stages</Text>
-            <View className="flex-row justify-between">
+          <View className="mb-8">
+            <Text className="font-sora-medium text-secondary text-lg mb-4">Tree Stages</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                backgroundColor: "rgba(0, 184, 101, 0.05)",
+                borderRadius: 16,
+                padding: 12,
+              }}
+            >
               <Text className="text-2xl">🌰</Text>
               <Text className="text-2xl">🌱</Text>
               <Text className="text-2xl">🌿</Text>
@@ -117,7 +272,15 @@ const TreeSection = () => {
             </View>
           </View>
 
-          <TouchableOpacity onPress={toggleModal} className="bg-primary rounded-full py-3 items-center">
+          <TouchableOpacity
+            onPress={toggleModal}
+            style={{
+              backgroundColor: "#00B865",
+              borderRadius: 999,
+              padding: 16,
+              alignItems: "center",
+            }}
+          >
             <Text className="font-sora-bold text-white text-lg">Close</Text>
           </TouchableOpacity>
         </View>
