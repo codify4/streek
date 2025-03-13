@@ -1,11 +1,17 @@
 "use client"
 
-import { Check } from "lucide-react-native"
+import { Check, Flame, Calendar, Award, TrendingUp } from "lucide-react-native"
 import { useRef, useState, useEffect } from "react"
 import { View, Text, Dimensions } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
-import Animated, { useAnimatedStyle, useSharedValue, withTiming, runOnJS, Layout } from "react-native-reanimated"
-import LottieView from "lottie-react-native"
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+  runOnJS,
+  Layout,
+  withSequence,
+} from "react-native-reanimated"
 import type { Habit } from "@/lib/habits"
 
 interface HabitCardProps {
@@ -20,6 +26,7 @@ const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.3
 const HabitCard = ({ habit, onComplete, onDelete }: HabitCardProps) => {
   const translateX = useSharedValue(0)
   const opacity = useSharedValue(1)
+  const scale = useSharedValue(1)
   const [isCompleted, setIsCompleted] = useState(false)
   const isDeleting = useRef(false)
 
@@ -31,6 +38,8 @@ const HabitCard = ({ habit, onComplete, onDelete }: HabitCardProps) => {
   const handleComplete = (id: string) => {
     // Only mark as completed if not already completed
     if (!isCompleted) {
+      // Animate the card when completed
+      scale.value = withSequence(withTiming(1.05, { duration: 200 }), withTiming(1, { duration: 200 }))
       setIsCompleted(true)
       onComplete(id)
     } else {
@@ -59,7 +68,7 @@ const HabitCard = ({ habit, onComplete, onDelete }: HabitCardProps) => {
     })
 
   const rStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }],
+    transform: [{ translateX: translateX.value }, { scale: scale.value }],
   }))
 
   const rContainerStyle = useAnimatedStyle(() => ({
@@ -73,6 +82,26 @@ const HabitCard = ({ habit, onComplete, onDelete }: HabitCardProps) => {
   const rRightActionStyle = useAnimatedStyle(() => ({
     opacity: translateX.value < 0 ? Math.min(1, -translateX.value / SWIPE_THRESHOLD) : 0,
   }))
+
+  // Get a lighter shade of the habit color for the background
+  const getLighterColor = () => {
+    // If habit.color is a hex value, convert it to a lighter shade
+    if (habit.color.startsWith("#")) {
+      return habit.color + "30" // Adding 15 for 15% opacity
+    }
+    // For named colors, return a light background
+    return isCompleted ? "#e6f7ef" : "#F0EFEF"
+  }
+
+  // Calculate streak milestone
+  const getStreakMilestone = () => {
+    if (habit.streak >= 100) return "💯"
+    if (habit.streak >= 50) return "🔥"
+    if (habit.streak >= 30) return "🌟"
+    if (habit.streak >= 14) return "✨"
+    if (habit.streak >= 7) return "👏"
+    return ""
+  }
 
   return (
     <Animated.View className="w-full overflow-hidden mb-4" style={rContainerStyle} layout={Layout.springify()}>
@@ -111,45 +140,85 @@ const HabitCard = ({ habit, onComplete, onDelete }: HabitCardProps) => {
 
       <GestureDetector gesture={panGesture}>
         <Animated.View
-          className={`w-full rounded-3xl ${isCompleted ? "bg-primary/10" : ""}`}
           style={[
             rStyle,
-            { backgroundColor: isCompleted ? "#e6f7ef" : "#F0EFEF", paddingHorizontal: 20, paddingVertical: 16 },
+            {
+              backgroundColor: getLighterColor(),
+              borderRadius: 24,
+              padding: 20,
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 4,
+              elevation: 2,
+            },
           ]}
         >
-          <View className="flex-col justify-start items-start mb-2">
-            <View className="flex-row items-center">
-              <Text className="text-secondary font-sora-bold text-3xl">{habit.name}</Text>
-              {isCompleted && (
-                <View className="ml-3 bg-primary rounded-full p-1">
-                  <Check color="white" size={18} strokeWidth={3} />
-                </View>
-              )}
+          <View className="flex-row justify-between items-start">
+            <View className="flex-1">
+              <View className="flex-row items-center">
+                <Text className="text-secondary font-sora-bold text-2xl">{habit.name}</Text>
+                {isCompleted && (
+                  <View className="ml-3 bg-primary rounded-full p-1">
+                    <Check color="white" size={16} strokeWidth={3} />
+                  </View>
+                )}
+              </View>
+
+              <View className="flex-row items-center mt-1">
+                <Calendar size={14} color="#666" />
+                <Text className="text-gray-500 font-sora-medium text-sm ml-1">Daily</Text>
+              </View>
             </View>
-            <View className="flex-1 flex-row items-center justify-center">
-              <LottieView
-                source={{ uri: "https://lottie.host/7a9ddf93-24b7-4bd9-8a73-ab95d06584dd/F4xzQAEY6P.json" }}
-                autoPlay
-                loop
-                style={{ width: 30, height: 30 }}
-              />
-              <Text className="text-secondary font-sora-semibold text-xl ml-1">{habit.streak} days</Text>
+
+            {/* Streak badge */}
+            <View
+              style={{
+                backgroundColor: isCompleted ? habit.color : "#f0f0f0",
+                borderRadius: 12,
+                padding: 8,
+                minWidth: 70,
+                alignItems: "center",
+              }}
+            >
+              <View className="flex-row items-center justify-center">
+                <Flame
+                  size={16}
+                  color={isCompleted ? "white" : habit.color}
+                  fill={isCompleted ? "white" : habit.color}
+                />
+                <Text
+                  style={{
+                    fontFamily: "sora-semibold",
+                    fontSize: 16,
+                    marginLeft: 4,
+                    color: isCompleted ? "white" : "#333",
+                  }}
+                >
+                  {habit.streak}
+                </Text>
+              </View>
+              <Text
+                style={{
+                  fontFamily: "sora-medium",
+                  fontSize: 12,
+                  color: isCompleted ? "white" : "#666",
+                }}
+              >
+                {habit.streak === 1 ? "day" : "days"}
+              </Text>
             </View>
           </View>
 
-          <View className="flex-row items-center">
-            <Text className="mr-2 text-lg">🌰</Text>
-            <View className="flex-1 h-3 rounded-full" style={{ backgroundColor: "#D9D9D9" }}>
-              <View
-                className="rounded-full"
-                style={{
-                  width: `${isCompleted ? 100 : 50}%`,
-                  height: 10,
-                  backgroundColor: habit.color,
-                }}
-              />
+          {/* Stats section */}
+          <View className="flex-row justify-between mt-4 pt-3 border-t border-white">
+            {/* Milestone */}
+            <View className="flex-row items-center">
+              <Award size={16} color="#666" />
+              <Text className="text-gray-600 font-sora-medium text-sm ml-1">
+                {getStreakMilestone() ? `${getStreakMilestone()} Milestone` : "Keep going!"}
+              </Text>
             </View>
-            <Text className="ml-2 text-lg">🌴</Text>
           </View>
         </Animated.View>
       </GestureDetector>
