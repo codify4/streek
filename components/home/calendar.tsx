@@ -111,7 +111,7 @@ const Calendar = ({ onSelectDay, hasCompletionsOnDate }: CalendarProps) => {
   })
 
   return (
-    <View className="w-full bg-[#F0EFEF] rounded-3xl mb-5 mt-2 pt-2 pb-3 px-2">
+    <View className="w-full bg-[#1B1B3A0D] rounded-3xl mb-5 mt-2 pt-2 pb-3 px-2">
       {/* Month header */}
       <Animated.View className="px-4 mb-2 flex-row justify-between items-center" style={monthHeaderStyle}>
         <Text className="font-sora-bold text-lg text-secondary">
