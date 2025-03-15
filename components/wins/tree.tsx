@@ -249,14 +249,15 @@ const TreeSection = () => {
               padding: 24,
               width: SCREEN_WIDTH * 0.9,
               height: 600,
-              top: 350
             },
             Platform.OS === "ios" ? { 
               shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 0.1,
               shadowRadius: 12,
               elevation: 5,
-            } : {},
+            } : {
+              top: 350
+            },
           ]}
         >
           <Text className="font-sora-bold text-secondary text-3xl mb-6">Tree Progress</Text>

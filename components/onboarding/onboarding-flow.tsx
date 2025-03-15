@@ -44,7 +44,7 @@ export const OnboardingInput: React.FC<OnboardingInputProps> = ({
 
         return (
             <View className="flex-1 ml-2">
-                <View className="bg-transparent rounded-2xl overflow-hidden border border-secondary">
+                <View className={`bg-transparent rounded-2xl overflow-hidden ${Platform.OS === 'ios' ? '' : 'border border-secondary'}`}>
                     <Picker
                         selectedValue={selectedAge}
                         onValueChange={setSelectedAge}
