@@ -198,7 +198,7 @@ export default function TabLayout() {
         />
       </Tabs>
 
-      <BotSheet ref={bottomSheetRef} snapPoints={["80%"]}>
+      <BotSheet ref={bottomSheetRef} snapPoints={Platform.OS === "ios" ? ["80%"] : ["95%"]}>
         <AddHabit onClose={handleCloseBottomSheet} onHabitCreated={handleHabitCreated} />
       </BotSheet>
     </>

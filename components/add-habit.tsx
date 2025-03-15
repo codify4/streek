@@ -107,7 +107,7 @@ const AddHabit: React.FC<AddHabitProps> = ({ onClose, onHabitCreated }) => {
                 </ColorPicker>
             </View>
             <TouchableOpacity
-                className="bg-primary p-5 rounded-full items-center mb-8 flex-row justify-center gap-2 mt-5"
+                className="bg-primary p-5 rounded-full items-center mb-10 flex-row justify-center gap-2 mt-5"
                 style={{ width: "90%" }}
                 onPress={handleCreateHabit}
                 disabled={isLoading}

@@ -2,7 +2,7 @@
 
 import { Check, Flame, Calendar, Award, TrendingUp } from "lucide-react-native"
 import { useRef, useState, useEffect } from "react"
-import { View, Text, Dimensions } from "react-native"
+import { View, Text, Dimensions, Platform } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
   useAnimatedStyle,
@@ -146,12 +146,13 @@ const HabitCard = ({ habit, onComplete, onDelete }: HabitCardProps) => {
               backgroundColor: getLighterColor(),
               borderRadius: 24,
               padding: 20,
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.1,
-              shadowRadius: 4,
-              elevation: 2,
             },
+            Platform.OS === "ios" ? { 
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.05,
+              shadowRadius: 8,
+              elevation: 2,
+            } : {},
           ]}
         >
           <View className="flex-row justify-between items-start">
