@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 import type React from "react"
-import { View, Text, ActivityIndicator } from "react-native"
+import { View, Text, ActivityIndicator, Platform } from "react-native"
 import { Flame, RefreshCw, Target } from "lucide-react-native"
 import Animated, { 
   useSharedValue, 
@@ -59,13 +59,14 @@ const StatCard = ({ title, value, subtitle, icon, index }: StatCardProps) => {
           flex: 1,
           borderRadius: 24,
           padding: 16,
-          shadowColor: "#000",
+          backgroundColor: "#1B1B3A0D"
+        },
+        Platform.OS === "ios" ? { 
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.05,
           shadowRadius: 8,
           elevation: 2,
-          backgroundColor: "#1B1B3A0D"
-        }
+        } : {},
       ]}
     >
       <View className="flex-row justify-between items-start mb-2">

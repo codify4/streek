@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useCallback, useEffect } from "react"
-import { View, Text, TouchableOpacity, Dimensions } from "react-native"
+import { View, Text, TouchableOpacity, Dimensions, Platform } from "react-native"
 import Modal from "react-native-modal"
 import Animated, {
   useSharedValue,
@@ -118,17 +118,19 @@ const TreeSection = () => {
     <>
       <TouchableOpacity onPress={toggleModal} activeOpacity={0.9}>
         <View
-          style={{
-            borderRadius: 24,
-            padding: 24,
-            backgroundColor: "#1B1B3A0D",
-            marginBottom: 32,
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.05,
-            shadowRadius: 8,
-            elevation: 2,
-          }}
+          style={[{
+              borderRadius: 24,
+              padding: 24,
+              backgroundColor: "#1B1B3A0D",
+              marginBottom: 32,
+            },
+            Platform.OS === "ios" ? { 
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.05,
+              shadowRadius: 8,
+              elevation: 2,
+            } : {},
+          ]}
         >
           <Text className="font-sora-bold text-secondary text-2xl mb-4">My Tree</Text>
 

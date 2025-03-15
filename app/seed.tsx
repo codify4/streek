@@ -116,12 +116,6 @@ const Seed = () => {
               onPress={() => router.push("/onboarding")}
               style={Platform.OS === "ios" ? { paddingHorizontal: 80 } : { paddingHorizontal: 90 }}
             >
-              <LinearGradient
-                colors={["#FF9800", "#F57C00"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                className="absolute inset-0 rounded-full"
-              />
               <Text className="font-sora-semibold text-xl text-white text-center">Grow your seedling</Text>
             </TouchableOpacity>
           </Animated.View>

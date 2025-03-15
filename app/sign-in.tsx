@@ -135,7 +135,7 @@ const SignIn = () => {
 
                     {/* Google Sign In button */}
                     <TouchableOpacity
-                        className="bg-[#e7e7e7] rounded-full py-5 flex-row items-center justify-center mb-8"
+                        className={`bg-[#e7e7e7] rounded-full py-5 flex-row items-center justify-center ${Platform.OS === 'ios' ? 'mb-7' : 'mb-5'}`}
                         activeOpacity={0.8}
                         onPress={performOAuth}
                     >
@@ -144,7 +144,7 @@ const SignIn = () => {
                     </TouchableOpacity>
 
                     {/* Skip button */}
-                    <TouchableOpacity className="flex flex-row items-center justify-center border border-gray-300 rounded-full py-5 mt-10" activeOpacity={0.8} onPress={() => router.push('/seed')}>
+                    <TouchableOpacity className={`flex flex-row items-center justify-center border border-gray-300 rounded-full py-5 ${Platform.OS === 'ios' ? 'mt-10' : 'mt-0'}`} activeOpacity={0.8} onPress={() => router.push('/seed')}>
                         <Text className="font-sora-semibold text-lg text-secondary text-center">Skip for now</Text>
                         <ChevronRight color="#1B1B3A"/>
                     </TouchableOpacity>

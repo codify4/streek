@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { View, Text, TouchableOpacity } from "react-native"
+import { View, Text, TouchableOpacity, Platform } from "react-native"
 import { quotes } from "@/constants/wins-data"
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, withSequence, Easing } from "react-native-reanimated"
 import { Quote } from "lucide-react-native"
@@ -72,17 +72,19 @@ const QuoteSection = () => {
   return (
     <TouchableOpacity onPress={changeQuote} activeOpacity={0.9}>
       <View
-        style={{
+        style={[{
           borderRadius: 24,
-          padding: 20,
-          marginBottom: 24,
+          padding: 24,
           backgroundColor: "#1B1B3A0D",
-          shadowColor: "#000",
+          marginBottom: 32,
+        },
+        Platform.OS === "ios" ? { 
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.05,
           shadowRadius: 8,
           elevation: 2,
-        }}
+        } : {},
+      ]}
       >
         <View className="flex-row items-center justify-between mb-4">
           <Text className="font-sora-bold text-secondary text-2xl">Quote of the day</Text>
