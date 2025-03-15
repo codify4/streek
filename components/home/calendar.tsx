@@ -161,8 +161,9 @@ const Calendar = ({ onSelectDay, hasCompletionsOnDate }: CalendarProps) => {
             dateTextStyle = "text-white"
             dayTextStyle = "text-white"
           } else if (hasCompletions) {
-            cardStyle = "bg-primary/20"
-            dateTextStyle = "text-primary"
+            cardStyle = "bg-primary"
+            dayTextStyle = "text-white"
+            dateTextStyle = "text-white"
           } else if (dayStatus === "past") {
             cardStyle = "bg-secondary"
             dateTextStyle = "text-gray-300"
