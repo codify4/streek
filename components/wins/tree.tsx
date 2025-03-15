@@ -17,7 +17,7 @@ import { useTreeProgress } from "@/hooks/use-tree"
 import { useAuth } from "@/context/auth"
 import { TREE_STAGES } from "@/lib/tree-progress"
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window")
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window")
 
 const TreeSection = () => {
   const { session } = useAuth()
@@ -242,17 +242,22 @@ const TreeSection = () => {
         animationOut="zoomOut"
       >
         <View
-          style={{
-            backgroundColor: "white",
-            borderRadius: 24,
-            padding: 24,
-            width: SCREEN_WIDTH * 0.9,
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.1,
-            shadowRadius: 12,
-            elevation: 5,
-          }}
+          style={[
+            {
+              backgroundColor: "white",
+              borderRadius: 24,
+              padding: 24,
+              width: SCREEN_WIDTH * 0.9,
+              height: 600,
+              top: 350
+            },
+            Platform.OS === "ios" ? { 
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.1,
+              shadowRadius: 12,
+              elevation: 5,
+            } : {},
+          ]}
         >
           <Text className="font-sora-bold text-secondary text-3xl mb-6">Tree Progress</Text>
 
