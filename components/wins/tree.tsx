@@ -12,12 +12,18 @@ import Animated, {
   Easing,
   withTiming,
 } from "react-native-reanimated"
-import { treeProgress } from "@/constants/wins-data"
 import { Sparkles } from "lucide-react-native"
+import { useTreeProgress } from "@/hooks/use-tree"
+import { useAuth } from "@/context/auth"
+import { TREE_STAGES } from "@/lib/tree-progress"
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window")
 
 const TreeSection = () => {
+  const { session } = useAuth()
+  const userId = session?.user?.id
+  const { treeStage, nextStageProgress, points, loading, refreshProgress } = useTreeProgress(userId)
+
   const [isModalVisible, setModalVisible] = useState(false)
   const rotation = useSharedValue(0)
   const scale = useSharedValue(1)
@@ -49,18 +55,14 @@ const TreeSection = () => {
   }, [])
 
   const toggleModal = useCallback(() => {
+    if (!isModalVisible) {
+      refreshProgress()
+    }
+
     setModalVisible(!isModalVisible)
     rotation.value = withRepeat(withSequence(withSpring(10), withSpring(-10), withSpring(0)), 2, true)
     scale.value = withSequence(withSpring(1.2), withSpring(1))
-  }, [isModalVisible, rotation, scale])
-
-  const getTreeEmoji = (progress: number) => {
-    if (progress < 20) return "🌱"
-    if (progress < 40) return "🌿"
-    if (progress < 60) return "🌳"
-    if (progress < 80) return "🌲"
-    return "🌴"
-  }
+  }, [isModalVisible, rotation, scale, refreshProgress])
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
@@ -84,14 +86,33 @@ const TreeSection = () => {
 
   React.useEffect(() => {
     if (isModalVisible) {
-      progressBarWidth.value = withTiming(treeProgress, {
+      progressBarWidth.value = withTiming(nextStageProgress, {
         duration: 1500,
         easing: Easing.bezier(0.25, 0.1, 0.25, 1),
       })
     } else {
       progressBarWidth.value = 0
     }
-  }, [isModalVisible, progressBarWidth])
+  }, [isModalVisible, progressBarWidth, nextStageProgress])
+
+  // Default to seed emoji if loading or no tree stage
+  const treeEmoji = treeStage?.emoji || "🌰"
+  const progress = loading ? 0 : nextStageProgress
+
+  // Calculate points needed for next stage
+  const getNextStage = () => {
+    if (!treeStage) return TREE_STAGES[1]
+
+    // If at max stage, return the current stage
+    if (treeStage.id === TREE_STAGES.length) {
+      return treeStage
+    }
+
+    return TREE_STAGES[treeStage.id]
+  }
+
+  const nextStage = getNextStage()
+  const pointsNeeded = nextStage.minPoints - points
 
   return (
     <>
@@ -164,13 +185,17 @@ const TreeSection = () => {
               <Sparkles size={16} color="#FFD700" />
             </Animated.View>
 
-            <Animated.Text style={animatedStyles} className="text-8xl">
-              {getTreeEmoji(treeProgress)}
-            </Animated.Text>
+            {/* Increased container size for the emoji */}
+            <View style={{ width: 120, height: 120, alignItems: "center", justifyContent: "center" }}>
+              <Animated.Text style={[animatedStyles, { fontSize: 80 }]}>{treeEmoji}</Animated.Text>
+            </View>
           </View>
 
           <View className="flex-row items-center">
-            <Text className="mr-2 text-2xl">🌰</Text>
+            {/* Adjusted container sizes for progress bar emojis */}
+            <View style={{ width: 32, height: 32, alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ fontSize: 24 }}>{treeStage?.emoji || "🌰"}</Text>
+            </View>
             <View
               style={{
                 flex: 1,
@@ -178,22 +203,29 @@ const TreeSection = () => {
                 backgroundColor: "rgba(255, 255, 255, 0.8)",
                 borderRadius: 999,
                 overflow: "hidden",
+                marginHorizontal: 8,
               }}
             >
               <View
                 style={{
                   height: "100%",
-                  width: `${treeProgress}%`,
+                  width: `${progress}%`,
                   backgroundColor: "#00B865",
                   borderRadius: 999,
                 }}
               />
             </View>
-            <Text className="ml-2 text-2xl">🌴</Text>
+            <View style={{ width: 32, height: 32, alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ fontSize: 24 }}>{nextStage.emoji}</Text>
+            </View>
           </View>
 
           <View className="flex-row justify-center mt-3">
-            <Text className="font-sora-semibold text-secondary/70 text-sm">{treeProgress}% Growth</Text>
+            <Text className="font-sora-semibold text-secondary/70 text-sm">
+              {treeStage?.id === TREE_STAGES.length
+                ? "Maximum Growth Achieved!"
+                : `${progress}% to ${nextStage.name} (${pointsNeeded} points needed)`}
+            </Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -223,24 +255,32 @@ const TreeSection = () => {
           <Text className="font-sora-bold text-secondary text-3xl mb-6">Tree Progress</Text>
 
           <Animated.View style={animatedStyles} className="items-center mb-8">
+            {/* Adjusted container size and emoji size in modal */}
             <View
               style={{
-                width: 140,
-                height: 140,
-                borderRadius: 70,
+                width: 160,
+                height: 160,
+                borderRadius: 80,
                 backgroundColor: "rgba(0, 184, 101, 0.1)",
                 alignItems: "center",
                 justifyContent: "center",
                 marginBottom: 16,
               }}
             >
-              <Text className="text-9xl">{getTreeEmoji(treeProgress)}</Text>
+              <Text style={{ fontSize: 100 }}>{treeEmoji}</Text>
             </View>
-            <Text className="font-sora-semibold text-secondary text-2xl">{treeProgress}% Growth</Text>
+            <Text className="font-sora-semibold text-secondary text-2xl">{treeStage?.name || "Seed"}</Text>
+            <Text className="font-sora-medium text-secondary/70 mt-1">
+              {treeStage?.id === TREE_STAGES.length
+                ? "Maximum Growth Achieved!"
+                : `${points} points (${pointsNeeded} more to ${nextStage.name})`}
+            </Text>
           </Animated.View>
 
           <View className="mb-6">
-            <Text className="font-sora-medium text-secondary text-lg mb-2">Growth Progress</Text>
+            <Text className="font-sora-medium text-secondary text-lg mb-2">
+              {treeStage?.id === TREE_STAGES.length ? "Growth Complete" : `Progress to ${nextStage.name}`}
+            </Text>
             <View
               style={{
                 backgroundColor: "#E2E8F0",
@@ -254,6 +294,7 @@ const TreeSection = () => {
 
           <View className="mb-8">
             <Text className="font-sora-medium text-secondary text-lg mb-4">Tree Stages</Text>
+            {/* Adjusted container sizes for tree stage emojis */}
             <View
               style={{
                 flexDirection: "row",
@@ -263,12 +304,19 @@ const TreeSection = () => {
                 padding: 12,
               }}
             >
-              <Text className="text-2xl">🌰</Text>
-              <Text className="text-2xl">🌱</Text>
-              <Text className="text-2xl">🌿</Text>
-              <Text className="text-2xl">🌳</Text>
-              <Text className="text-2xl">🌲</Text>
-              <Text className="text-2xl">🌴</Text>
+              {TREE_STAGES.map((stage) => (
+                <View
+                  key={stage.id}
+                  style={{
+                    width: 32,
+                    height: 32,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text style={{ fontSize: 24 }}>{stage.emoji}</Text>
+                </View>
+              ))}
             </View>
           </View>
 

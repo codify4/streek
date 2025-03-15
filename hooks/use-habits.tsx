@@ -18,6 +18,7 @@ import {
   updateHabit,
   isHabitCompletedOnDate,
 } from "../lib/habits"
+import { useTreeProgress } from "./use-tree"
 
 export interface CompletionsByDate {
   [date: string]: boolean // date string in format 'YYYY-MM-DD'
@@ -29,6 +30,9 @@ export const useHabits = (userId: string | undefined) => {
   const [completionsByDate, setCompletionsByDate] = useState<CompletionsByDate>({})
   const [loading, setLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
+
+  // Get tree progress functions
+  const { addHabitCompletionPoints } = useTreeProgress(userId)
 
   // Check and reset streaks for habits that missed a day
   const checkAndResetStreaks = useCallback(async (habitsToCheck: Habit[], completions: HabitCompletions) => {
@@ -301,7 +305,7 @@ export const useHabits = (userId: string | undefined) => {
       if (midnightCheck) clearTimeout(midnightCheck)
     }
     // Only depend on userId and the function itself
-  }, [userId, checkAndResetStreaks])
+  }, [userId, checkAndResetStreaks, habits, habitCompletions])
 
   // Check if a habit has been completed today
   const isHabitCompletedToday = useCallback(
@@ -377,6 +381,11 @@ export const useHabits = (userId: string | undefined) => {
 
       // Record the completion
       await recordHabitCompletion(id, userId)
+
+      // Add points to tree progress (2 points per completion)
+      console.log("Adding points to tree progress for user:", userId)
+      const success = await addHabitCompletionPoints()
+      console.log("Points added successfully:", success)
 
       if (!updatedHabit) {
         // If update fails, revert the optimistic update
